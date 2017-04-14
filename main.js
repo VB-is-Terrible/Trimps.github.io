@@ -32,7 +32,7 @@ document.getElementById("versionNumber").innerHTML = game.global.version;
 
 function autoSave() {
     if (game.options.menu.autoSave.enabled) save();
-    setTimeout(autoSave, 60000);
+    setTimeout(autoSave, 600000);
 }
 
 var lastOnlineSave = -1800000;
@@ -3027,10 +3027,10 @@ function toggleGeneticistassist(updateOnly){
 		currentStep++;
 		if (currentStep > (steps.length - 1)) currentStep = 0;
 		game.global.GeneticistassistSetting = steps[currentStep];
-		if (currentStep > 0){ 
+		if (currentStep > 0){
 			indicatorElem.innerHTML = ' (2)';
 			clearTimeout(GATimeout);
-			GATimeout = setTimeout(function(){ indicatorElem.innerHTML = ' (1)' }, 1000);
+			GATimeout = setTimeout(function(){ indicatorElem.innerHTML = ' (1)' }, 100000);
 			lastGAToggle = new Date().getTime();
 		}
 		else {lastGAToggle = -1; clearTimeout(GATimeout)};
@@ -9166,7 +9166,7 @@ function costUpdatesTimeout() {
     checkButtons("upgrades");
     checkTriggers();
 	if (tooltipUpdateFunction) tooltipUpdateFunction();
-	setTimeout(costUpdatesTimeout, 250);
+	setTimeout(costUpdatesTimeout, 100000);
 }
 
 function toggleVoidMaps(updateOnly){
@@ -9257,7 +9257,7 @@ function saveAutoStructureConfig(){
 }
 
 function buyAutoStructures(){
-	setTimeout(buyAutoStructures, 350);
+	setTimeout(buyAutoStructures, 100000);
 	if (game.options.menu.pauseGame.enabled)
 		return;
 	var setting = game.global.autoStructureSetting;
@@ -9969,7 +9969,7 @@ function gameTimeout() {
 		game.global.start = now;
 		game.global.time = 0;
 		game.global.lastOnline = now;
-		setTimeout(gameTimeout, (1000 / game.settings.speed));
+		setTimeout(gameTimeout, (100000 / game.settings.speed));
 		return;
 	}
 	game.global.lastOnline = now;
@@ -9984,7 +9984,7 @@ function gameTimeout() {
     }
     gameLoop(null, now);
     updateLabels();
-    setTimeout(gameTimeout, (tick - dif));
+    setTimeout(gameTimeout, 100000);
 }
 
 
@@ -10019,7 +10019,7 @@ function updatePortalTimer(justGetTime) {
 		if (game.global.selectedChallenge == "Daily") updateDailyClock();
 	}
 	document.getElementById("portalTime").innerHTML = timeString;
-	setTimeout(updatePortalTimer, 1000);
+	setTimeout(updatePortalTimer, 100000);
 }
 
 var shiftPressed = false;
@@ -10089,7 +10089,7 @@ load();
 updatePortalTimer();
 displayPerksBtn();
 
-setTimeout(autoSave, 60000);
-setTimeout(buyAutoStructures, 2000);
+setTimeout(autoSave, 600000);
+setTimeout(buyAutoStructures, 200000);
 costUpdatesTimeout();
-setTimeout(gameTimeout, (1000 / game.settings.speed));
+setTimeout(gameTimeout, 100000);
