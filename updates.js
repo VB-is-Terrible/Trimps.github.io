@@ -2324,60 +2324,95 @@ function applyS5(){
 //    });
 // }
 message = (() => {
-   const STRATEGY = 0;
-   const WAIT_TIME = 50; //ms
-   let queue = [];
-   let story_queue = [];
+   let queues = {
+      Story: [],
+      Unlocks: [],
+      Notices: [],
+      Loot: [],
+      Combat: []
+   };
+   let doesNotNeedsScroll = true;
    let requestID = null;
-   let updater = (timer) => {
-      if (const === 0) {
-         if (timer === undefined) {
-            timer = Date.now();
+   let counter = 0;
+
+   let merge(l1, l2) {
+      let result = [];
+      while (l1.length > 0 && l2.length > 0) {
+         if (l1[0].id < l2[0].id) {
+            result.push(l1.pop(0));
+         } else {
+            result.push(l2.pop(0));
          }
-      }
-
-      let log = document.getElementById("log");
-      let item;
-
-      if (const === 1) {
-         while (story_queue.length > 0) {
-            item = story_queue.pop(0);
-            log.innerHTML += item.HTMLstring;
-      }
-
-      while (queue.length > 0) {
-         item = queue.pop(0);
-         log.innerHTML += item.HTMLstring;
-
-         if (const === 0) {
-            // Limit the amount of time spend processing before handing it over to the GC
-            if (Date.now() - timer > WAIT_TIME) { // We shouldn't need performance.now()
-               setTimeout(updater, WAIT_TIME);
+         if (l1.length > 0) {
+            while (l1.length > 0) {
+               result.push(l1.pop(0));
+            }
+         } else {
+            while (l1.length > 0) {
+               result.push(l2.pop(0));
             }
          }
       }
+      return result;
+   };
+
+   let updater = (timer) => {
+      let log = document.getElementById("log");
+      let item;
+
+      let multiQueue = merge(
+         merge(
+            merge(queues.Combat, queues.Loot),
+            merge(queues.Notices, queues.Story)
+         ),
+         queues.Story);
+
+      let concatString = '';
+      for (item in multiQueue) {
+         concatString += item.HTMLstring;
+      }
+
+      log.innerHTML
+      // I'm too lazy to manually calculate what happened in the DOM, so force a layoout
+      let log_scroll_height
+
+      trimMessagesRAF('Unlocks');
+      trimMessagesRAF('Notices');
+      trimMessagesRAF('Loot');
+      trimMessagesRAF('Combat');
+      if (needsScroll) {log.scrollTop = log_scroll_height;}
 
       requestID = null;
-   }
+      queues = {
+         Story: [],
+         Unlocks: [],
+         Notices: [],
+         Loot: [],
+         Combat: []
+      };
+   };
 
-   let addToQueue = (obj) {
-      if (const === 1) {
-         let item;
+   let addToQueue = (obj) => {
+      obj.id = counter;
+      counter++;
+
+      let queue = queues[obj.type];
+      queue.push(obj);
+
+      if (!(obj.type == "Story")) {
          if (queue.length > 20) {
-            item = queue.pop(0);
-            if (item.type == 
+            queue.pop(0);
          }
       }
-      queue.push(obj);
       if (requestID === null) {
          requestID = requestAnimationFrame(updater);
       }
-   }
+   };
 
    return (function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
       if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
       var log = document.getElementById("log");
-      var needsScroll = ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight));
+      let needsScroll = ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight));
       var displayType = (game.global.messages[type].enabled) ? "block" : "none";
       var prefix = "";
       var addId = "";
@@ -2405,6 +2440,7 @@ message = (() => {
       }
       else messageString = htmlPrefix + " " + messageString;
       addToQueue({
+         id: 0,
          type: type,
          HTMLstring: "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>"
       })
@@ -2412,7 +2448,7 @@ message = (() => {
       // if (needsScroll) log.scrollTop = log.scrollHeight;
       // if (type != "Story") trimMessages(type);
    })
-}
+})();
 
 function getCurrentTime(){
 	var date = new Date();
@@ -2438,6 +2474,19 @@ function trimMessages(what){
 		for (var count = 0; count < (messageCount - 20); count++){
 			log.removeChild(toChange[count]);
 		}
+	}
+}
+
+function trimMessagesRAF(what){
+	var toChange = document.getElementsByClassName(what + "Message");
+	toChange = nodeToArray(toChange);
+	var messageCount = toChange.length;
+	if (messageCount > 20){
+      requestAnimationFrame(() => {
+         for (var count = 0; count < (messageCount - 20); count++){
+            log.removeChild(toChange[count]);
+         }
+      });
 	}
 }
 
