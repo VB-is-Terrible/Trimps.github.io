@@ -2379,11 +2379,11 @@ message = (() => {
       // I'm too lazy to manually calculate what happened in the DOM, so force a layoout
       let log_scroll_height
 
-      let U, N, L, C;
-      U = trimMessagesRAF('Unlocks');
-      N = trimMessagesRAF('Notices');
-      L = trimMessagesRAF('Loot');
-      C = trimMessagesRAF('Combat');
+      trimMessagesRAF('Unlocks');
+      trimMessagesRAF('Notices');
+      trimMessagesRAF('Loot');
+      trimMessagesRAF('Combat');
+
       requestAnimationFrame(() => {
          if (!doesNotNeedsScroll) {log.scrollTop = log_scroll_height;}
       })
@@ -2419,18 +2419,7 @@ message = (() => {
       }
    };
 
-   /**
-    * [message description] Displays message in the message log.
-    * @param  {[type]} messageString [description]
-    * @param  {[type]} type          [description]
-    * @param  {[type]} lootIcon      [description]
-    * @param  {[type]} extraClass    [description]
-    * @param  {[type]} extraTag      [description]
-    * @param  {[type]} htmlPrefix    [description]
-    * @return {[type]}               [description]
-    */
    return (function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
-      if (type == "Unlock") {debug();}
       if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
       var log = document.getElementById("log");
       let needsScroll = ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight));
