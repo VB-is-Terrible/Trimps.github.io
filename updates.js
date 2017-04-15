@@ -2399,6 +2399,10 @@ message = (() => {
       doesNotNeedsScroll = true;
    };
 
+   /**
+    * Queue up an item to be added to the message log
+    * @param {id: int, type: String, HTMLstring: String} obj container object for message
+    */
    let addToQueue = (obj) => {
       obj.id = counter;
       counter++;
@@ -2415,7 +2419,18 @@ message = (() => {
       }
    };
 
+   /**
+    * [message description] Displays message in the message log.
+    * @param  {[type]} messageString [description]
+    * @param  {[type]} type          [description]
+    * @param  {[type]} lootIcon      [description]
+    * @param  {[type]} extraClass    [description]
+    * @param  {[type]} extraTag      [description]
+    * @param  {[type]} htmlPrefix    [description]
+    * @return {[type]}               [description]
+    */
    return (function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
+      if (type == "Unlock") {debug();}
       if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
       var log = document.getElementById("log");
       let needsScroll = ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight));
