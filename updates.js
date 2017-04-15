@@ -2323,42 +2323,95 @@ function applyS5(){
 //       _message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix);
 //    });
 // }
+message = (() => {
+   const STRATEGY = 0;
+   const WAIT_TIME = 50; //ms
+   let queue = [];
+   let story_queue = [];
+   let requestID = null;
+   let updater = (timer) => {
+      if (const === 0) {
+         if (timer === undefined) {
+            timer = Date.now();
+         }
+      }
 
-function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
-	if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
-	var log = document.getElementById("log");
-	var needsScroll = ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight));
-	var displayType = (game.global.messages[type].enabled) ? "block" : "none";
-	var prefix = "";
-	var addId = "";
-	if (messageString == "Game Saved!" || extraClass == 'save') {
-		addId = " id='saveGame'";
-		if (document.getElementById('saveGame') !== null){
-			log.removeChild(document.getElementById('saveGame'));
-		}
-	}
-	if (game.options.menu.timestamps.enabled){
-		messageString = ((game.options.menu.timestamps.enabled == 1) ? getCurrentTime() : updatePortalTimer(true)) + " " + messageString;
-	}
-	if (!htmlPrefix){
-		if (lootIcon && lootIcon.charAt(0) == "*") {
-			lootIcon = lootIcon.replace("*", "");
-			prefix =  "icomoon icon-";
-		}
-		else prefix = "glyphicon glyphicon-";
-		if (type == "Story") messageString = "<span class='glyphicon glyphicon-star'></span> " + messageString;
-		if (type == "Combat") messageString = "<span class='glyphicon glyphicon-flag'></span> " + messageString;
-		if (type == "Loot" && lootIcon) messageString = "<span class='" + prefix + lootIcon + "'></span> " + messageString;
-		if (type == "Notices"){
-			messageString = "<span class='glyphicon glyphicon-off'></span> " + messageString;
-		}
-	}
-	else messageString = htmlPrefix + " " + messageString;
-   requestAnimationFrame(() => {
-      log.innerHTML += "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>";
+      let log = document.getElementById("log");
+      let item;
+
+      if (const === 1) {
+         while (story_queue.length > 0) {
+            item = story_queue.pop(0);
+            log.innerHTML += item.HTMLstring;
+      }
+
+      while (queue.length > 0) {
+         item = queue.pop(0);
+         log.innerHTML += item.HTMLstring;
+
+         if (const === 0) {
+            // Limit the amount of time spend processing before handing it over to the GC
+            if (Date.now() - timer > WAIT_TIME) { // We shouldn't need performance.now()
+               setTimeout(updater, WAIT_TIME);
+            }
+         }
+      }
+
+      requestID = null;
+   }
+
+   let addToQueue = (obj) {
+      if (const === 1) {
+         let item;
+         if (queue.length > 20) {
+            item = queue.pop(0);
+            if (item.type == 
+         }
+      }
+      queue.push(obj);
+      if (requestID === null) {
+         requestID = requestAnimationFrame(updater);
+      }
+   }
+
+   return (function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
+      if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
+      var log = document.getElementById("log");
+      var needsScroll = ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight));
+      var displayType = (game.global.messages[type].enabled) ? "block" : "none";
+      var prefix = "";
+      var addId = "";
+      if (messageString == "Game Saved!" || extraClass == 'save') {
+         addId = " id='saveGame'";
+         if (document.getElementById('saveGame') !== null){
+            log.removeChild(document.getElementById('saveGame'));
+         }
+      }
+      if (game.options.menu.timestamps.enabled){
+         messageString = ((game.options.menu.timestamps.enabled == 1) ? getCurrentTime() : updatePortalTimer(true)) + " " + messageString;
+      }
+      if (!htmlPrefix){
+         if (lootIcon && lootIcon.charAt(0) == "*") {
+            lootIcon = lootIcon.replace("*", "");
+            prefix =  "icomoon icon-";
+         }
+         else prefix = "glyphicon glyphicon-";
+         if (type == "Story") messageString = "<span class='glyphicon glyphicon-star'></span> " + messageString;
+         if (type == "Combat") messageString = "<span class='glyphicon glyphicon-flag'></span> " + messageString;
+         if (type == "Loot" && lootIcon) messageString = "<span class='" + prefix + lootIcon + "'></span> " + messageString;
+         if (type == "Notices"){
+            messageString = "<span class='glyphicon glyphicon-off'></span> " + messageString;
+         }
+      }
+      else messageString = htmlPrefix + " " + messageString;
+      addToQueue({
+         type: type,
+         HTMLstring: "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>"
+      })
+      // This doesn't work, as the work hasn't been done yet
+      // if (needsScroll) log.scrollTop = log.scrollHeight;
+      // if (type != "Story") trimMessages(type);
    })
-   if (needsScroll) log.scrollTop = log.scrollHeight;
-   if (type != "Story") trimMessages(type);
 }
 
 function getCurrentTime(){
