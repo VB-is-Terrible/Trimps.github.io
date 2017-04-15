@@ -2324,6 +2324,7 @@ function applyS5(){
 //    });
 // }
 message = (() => {
+   // These queues need to be opitimized.
    let queues = {
       Story: [],
       Unlocks: [],
@@ -2335,23 +2336,26 @@ message = (() => {
    let requestID = null;
    let counter = 0;
 
-   let merge(l1, l2) {
+   let merge = (l1, l2) => {
+      // Merge from mergeSort
       let result = [];
-      while (l1.length > 0 && l2.length > 0) {
-         if (l1[0].id < l2[0].id) {
-            result.push(l1.pop(0));
+      let l1p = 0, l2p = 0;
+      while (l1.length > l1p && l2.length > l2p) {
+         if (l1[l1p].id < l2[l2p].id) {
+            result.push(l1[l1p]);
+            l1p++;
          } else {
-            result.push(l2.pop(0));
+            result.push(l2[l2p]);
+            l2p++;
          }
-         if (l1.length > 0) {
-            while (l1.length > 0) {
-               result.push(l1.pop(0));
-            }
-         } else {
-            while (l1.length > 0) {
-               result.push(l2.pop(0));
-            }
-         }
+      }
+      while (l1.length > l1p) {
+         result.push(l1[l1p]);
+         l1p++;
+      }
+      while (l2.length > l2p) {
+         result.push(l2[l2p]);
+         l2p++;
       }
       return result;
    };
@@ -2360,27 +2364,29 @@ message = (() => {
       let log = document.getElementById("log");
       let item;
 
-      let multiQueue = merge(
-         merge(
-            merge(queues.Combat, queues.Loot),
-            merge(queues.Notices, queues.Story)
-         ),
-         queues.Story);
+      let t1, t2, t3;
+      t1 = merge(queues.Combat, queues.Loot);
+      t2 = merge(queues.Notices, queues.Story);
+      t3 = merge(t1, t2);
+      let multiQueue = merge(t3, queues.Story);
 
       let concatString = '';
       for (item in multiQueue) {
-         concatString += item.HTMLstring;
+         concatString += multiQueue[item].HTMLstring + ' ';
       }
 
-      log.innerHTML
+      log.innerHTML += concatString;
       // I'm too lazy to manually calculate what happened in the DOM, so force a layoout
       let log_scroll_height
 
-      trimMessagesRAF('Unlocks');
-      trimMessagesRAF('Notices');
-      trimMessagesRAF('Loot');
-      trimMessagesRAF('Combat');
-      if (needsScroll) {log.scrollTop = log_scroll_height;}
+      let U, N, L, C;
+      U = trimMessagesRAF('Unlocks');
+      N = trimMessagesRAF('Notices');
+      L = trimMessagesRAF('Loot');
+      C = trimMessagesRAF('Combat');
+      requestAnimationFrame(() => {
+         if (!doesNotNeedsScroll) {log.scrollTop = log_scroll_height;}
+      })
 
       requestID = null;
       queues = {
@@ -2390,6 +2396,7 @@ message = (() => {
          Loot: [],
          Combat: []
       };
+      doesNotNeedsScroll = true;
    };
 
    let addToQueue = (obj) => {
@@ -2398,10 +2405,9 @@ message = (() => {
 
       let queue = queues[obj.type];
       queue.push(obj);
-
       if (!(obj.type == "Story")) {
          if (queue.length > 20) {
-            queue.pop(0);
+            queue.shift();
          }
       }
       if (requestID === null) {
@@ -2443,7 +2449,8 @@ message = (() => {
          id: 0,
          type: type,
          HTMLstring: "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>"
-      })
+      });
+      doesNotNeedsScroll *= !needsScroll;
       // This doesn't work, as the work hasn't been done yet
       // if (needsScroll) log.scrollTop = log.scrollHeight;
       // if (type != "Story") trimMessages(type);
@@ -2488,6 +2495,7 @@ function trimMessagesRAF(what){
          }
       });
 	}
+   return messageCount - 20;
 }
 
 function filterMessage(what, updateOnly){ //send true for updateOnly
