@@ -22,7 +22,7 @@
 		<http://www.gnu.org/licenses/>. */
 "use strict";
 
-const TIMEOUT_MULTI = 10;
+const TIMEOUT_MULTI = 1;
 const TIME_BOOST = 100;
 if (typeof kongregate === 'undefined' && document.getElementById("boneBtn") !== null) {
 	var boneBtn = document.getElementById("getBonesBtn");
@@ -5788,7 +5788,7 @@ function battleCoordinator(makeUp) {
 	if (game.talents.hyperspeed2.purchased && (game.global.world <= Math.floor((game.global.highestLevelCleared + 1) * 0.5)))
 		{num -= 100;}
 	num /= TIME_BOOST;
-	if (game.global.battleCounter >= num) {
+	while (game.global.battleCounter >= num) {
         game.global.battleCounter -= num; //Thanks grabz
         fight(makeUp);
     }
@@ -9988,7 +9988,7 @@ function gameTimeout() {
     }
     gameLoop(null, now);
     updateLabels();
-    setTimeout(gameTimeout, (tick - dif) * TIMEOUT_MULTI));
+    setTimeout(gameTimeout, (tick - dif) * TIMEOUT_MULTI);
 }
 
 
@@ -10096,4 +10096,4 @@ displayPerksBtn();
 setTimeout(autoSave, 60000);
 setTimeout(buyAutoStructures, 2000 * TIMEOUT_MULTI);
 costUpdatesTimeout();
-setTimeout(gameTimeout, (1000 / game.settings.speed) * TIMEOUT_MULTI));
+setTimeout(gameTimeout, (1000 / game.settings.speed) * TIMEOUT_MULTI);
