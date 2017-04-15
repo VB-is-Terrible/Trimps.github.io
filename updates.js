@@ -2356,9 +2356,9 @@ function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix
 	else messageString = htmlPrefix + " " + messageString;
    requestAnimationFrame(() => {
       log.innerHTML += "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>";
-      if (needsScroll) log.scrollTop = log.scrollHeight;
-      if (type != "Story") trimMessages(type);
    })
+   if (needsScroll) log.scrollTop = log.scrollHeight;
+   if (type != "Story") trimMessages(type);
 }
 
 function getCurrentTime(){
