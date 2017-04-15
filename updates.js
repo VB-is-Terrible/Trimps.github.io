@@ -2366,7 +2366,7 @@ message = (() => {
 
       let t1, t2, t3;
       t1 = merge(queues.Combat, queues.Loot);
-      t2 = merge(queues.Notices, queues.Story);
+      t2 = merge(queues.Notices, queues.Unlocks);
       t3 = merge(t1, t2);
       let multiQueue = merge(t3, queues.Story);
 
