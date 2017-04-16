@@ -9965,6 +9965,8 @@ function gameLoop(makeUp, now) {
 
 
 function gameTimeout() {
+	// Don't know where yo put this
+	game.global.isBeta = true;
 	if (game.options.menu.pauseGame.enabled) return;
 	var now = new Date().getTime();
 	//4432
