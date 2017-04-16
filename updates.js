@@ -2318,29 +2318,30 @@ function applyS5(){
 	game.resources.metal.max = 562949953421312000;
 }
 
-// function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
-//    requestAnimationFrame(() => {
-//       _message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix);
-//    });
-// }
-message = (() => {
-   // These queues need to be opitimized.
-   let queues = {
+message = (function () {
+   // Optimized implementation of message written by 431741580 (VB-is-Terrible)
+   // If anything breaks, feel free to yell at him at 431741580derp@gmail.com
+
+   var queues = {
       Story: [],
       Unlocks: [],
       Notices: [],
       Loot: [],
       Combat: []
    };
-   let doesNotNeedsScroll = true;
-   let requestID = null;
-   let counter = 0;
-   let needsScroll = false;
+   var requestID = null;
+   var counter = 0;
 
-   let merge = (l1, l2) => {
+   /**
+    * Merge two arrays by the .id property
+    * @param  {Array} l1 List 1
+    * @param  {Array} l2 List 2
+    * @return {Array}    Merged List
+    */
+   function merge(l1, l2) {
       // Merge from mergeSort
-      let result = [];
-      let l1p = 0, l2p = 0;
+      var result = [];
+      var l1p = 0, l2p = 0;
       while (l1.length > l1p && l2.length > l2p) {
          if (l1[l1p].id < l2[l2p].id) {
             result.push(l1[l1p]);
@@ -2361,17 +2362,23 @@ message = (() => {
       return result;
    };
 
-   let updater = (timer) => {
-      let log = document.getElementById("log");
-      let beforeScroll = log.scrollTop;
-      let item;
-      let t1, t2, t3;
+	/**
+	 * Get and display all queued messages in queues
+	 * @param {DOMHighResTimeStamp} timer Time stamp given by requestAnimationFrame
+	 */
+   function updater(timer) {
+      var log = document.getElementById("log");
+      var beforeScroll = log.scrollTop;
+      var needsScroll =  (log.scrollTop + 10) > (log.scrollHeight - log.clientHeight);
+
+      var item;
+      var t1, t2, t3;
       t1 = merge(queues.Combat, queues.Loot);
       t2 = merge(queues.Notices, queues.Unlocks);
       t3 = merge(t1, t2);
-      let multiQueue = merge(t3, queues.Story);
+      var multiQueue = merge(t3, queues.Story);
 
-      let concatString = '';
+      var concatString = '';
       for (item in multiQueue) {
          concatString += multiQueue[item].HTMLstring + ' ';
       }
@@ -2384,10 +2391,9 @@ message = (() => {
       trimMessagesRAF('Loot');
       trimMessagesRAF('Combat');
 
-      let needsScrollTemp = needsScroll;
-      requestAnimationFrame(() => {
-         console.log(needsScrollTemp);
-         if (needsScroll) {
+      var needsScrollTemp = needsScroll;
+      requestAnimationFrame(function () {
+         if (needsScrollTemp) {
             log.scrollTop = log.scrollHeight;
          } else {
             log.scrollTop = beforeScroll;
@@ -2407,13 +2413,16 @@ message = (() => {
 
    /**
     * Queue up an item to be added to the message log
-    * @param {id: int, type: String, HTMLstring: String} obj container object for message
+    * @param {{id: int, type: String, HTMLstring: String}} obj container object for message
     */
-   let addToQueue = (obj) => {
+   function addToQueue(obj) {
       obj.id = counter;
       counter++;
 
-      let queue = queues[obj.type];
+      var queue = queues[obj.type];
+      if (queue === undefined) {
+         console.log("Invalid type: " + obj.type);
+      }
       queue.push(obj);
       if (!(obj.type == "Story")) {
          if (queue.length > 20) {
@@ -2428,9 +2437,6 @@ message = (() => {
    return (function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
       if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
       var log = document.getElementById("log");
-      if ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight)) {
-         needsScroll = true;
-      }
       var displayType = (game.global.messages[type].enabled) ? "block" : "none";
       var prefix = "";
       var addId = "";
@@ -2462,10 +2468,6 @@ message = (() => {
          type: type,
          HTMLstring: "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>"
       });
-      doesNotNeedsScroll *= !needsScroll;
-      // This doesn't work, as the work hasn't been done yet
-      // if (needsScroll) log.scrollTop = log.scrollHeight;
-      // if (type != "Story") trimMessages(type);
    })
 })();
 
@@ -2507,7 +2509,6 @@ function trimMessagesRAF(what){
          }
       });
 	}
-   return messageCount - 20;
 }
 
 function filterMessage(what, updateOnly){ //send true for updateOnly
