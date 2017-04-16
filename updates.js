@@ -2318,11 +2318,6 @@ function applyS5(){
 	game.resources.metal.max = 562949953421312000;
 }
 
-// function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
-//    requestAnimationFrame(() => {
-//       _message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix);
-//    });
-// }
 message = (() => {
    // These queues need to be opitimized.
    let queues = {
@@ -2332,10 +2327,8 @@ message = (() => {
       Loot: [],
       Combat: []
    };
-   let doesNotNeedsScroll = true;
    let requestID = null;
    let counter = 0;
-   let needsScroll = false;
 
    let merge = (l1, l2) => {
       // Merge from mergeSort
@@ -2364,6 +2357,8 @@ message = (() => {
    let updater = (timer) => {
       let log = document.getElementById("log");
       let beforeScroll = log.scrollTop;
+      let needsScroll =  (log.scrollTop + 10) > (log.scrollHeight - log.clientHeight);
+
       let item;
       let t1, t2, t3;
       t1 = merge(queues.Combat, queues.Loot);
@@ -2386,8 +2381,7 @@ message = (() => {
 
       let needsScrollTemp = needsScroll;
       requestAnimationFrame(() => {
-         console.log(needsScrollTemp);
-         if (needsScroll) {
+         if (needsScrollTemp) {
             log.scrollTop = log.scrollHeight;
          } else {
             log.scrollTop = beforeScroll;
@@ -2414,6 +2408,9 @@ message = (() => {
       counter++;
 
       let queue = queues[obj.type];
+      if (queue === undefined) {
+         console.log("Invalid type: " + obj.type);
+      }
       queue.push(obj);
       if (!(obj.type == "Story")) {
          if (queue.length > 20) {
@@ -2428,9 +2425,6 @@ message = (() => {
    return (function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
       if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
       var log = document.getElementById("log");
-      if ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight)) {
-         needsScroll = true;
-      }
       var displayType = (game.global.messages[type].enabled) ? "block" : "none";
       var prefix = "";
       var addId = "";
@@ -2462,10 +2456,6 @@ message = (() => {
          type: type,
          HTMLstring: "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>"
       });
-      doesNotNeedsScroll *= !needsScroll;
-      // This doesn't work, as the work hasn't been done yet
-      // if (needsScroll) log.scrollTop = log.scrollHeight;
-      // if (type != "Story") trimMessages(type);
    })
 })();
 
