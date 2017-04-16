@@ -2335,6 +2335,7 @@ message = (() => {
    let doesNotNeedsScroll = true;
    let requestID = null;
    let counter = 0;
+   let needsScroll = false;
 
    let merge = (l1, l2) => {
       // Merge from mergeSort
@@ -2362,8 +2363,8 @@ message = (() => {
 
    let updater = (timer) => {
       let log = document.getElementById("log");
+      let beforeScroll = log.scrollTop;
       let item;
-
       let t1, t2, t3;
       t1 = merge(queues.Combat, queues.Loot);
       t2 = merge(queues.Notices, queues.Unlocks);
@@ -2377,15 +2378,20 @@ message = (() => {
 
       log.innerHTML += concatString;
       // I'm too lazy to manually calculate what happened in the DOM, so force a layoout
-      let log_scroll_height
 
       trimMessagesRAF('Unlocks');
       trimMessagesRAF('Notices');
       trimMessagesRAF('Loot');
       trimMessagesRAF('Combat');
 
+      let needsScrollTemp = needsScroll;
       requestAnimationFrame(() => {
-         if (!doesNotNeedsScroll) {log.scrollTop = log_scroll_height;}
+         console.log(needsScrollTemp);
+         if (needsScroll) {
+            log.scrollTop = log.scrollHeight;
+         } else {
+            log.scrollTop = beforeScroll;
+         }
       })
 
       requestID = null;
@@ -2396,7 +2402,7 @@ message = (() => {
          Loot: [],
          Combat: []
       };
-      doesNotNeedsScroll = true;
+      needsScroll = false;
    };
 
    /**
@@ -2422,7 +2428,9 @@ message = (() => {
    return (function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
       if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
       var log = document.getElementById("log");
-      let needsScroll = ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight));
+      if ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight)) {
+         needsScroll = true;
+      }
       var displayType = (game.global.messages[type].enabled) ? "block" : "none";
       var prefix = "";
       var addId = "";
