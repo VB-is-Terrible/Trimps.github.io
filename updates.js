@@ -2318,22 +2318,22 @@ function applyS5(){
 	game.resources.metal.max = 562949953421312000;
 }
 
-message = (() => {
+message = (function () {
    // These queues need to be opitimized.
-   let queues = {
+   var queues = {
       Story: [],
       Unlocks: [],
       Notices: [],
       Loot: [],
       Combat: []
    };
-   let requestID = null;
-   let counter = 0;
+   var requestID = null;
+   var counter = 0;
 
-   let merge = (l1, l2) => {
+   function merge (l1, l2) {
       // Merge from mergeSort
-      let result = [];
-      let l1p = 0, l2p = 0;
+      var result = [];
+      var l1p = 0, l2p = 0;
       while (l1.length > l1p && l2.length > l2p) {
          if (l1[l1p].id < l2[l2p].id) {
             result.push(l1[l1p]);
@@ -2354,19 +2354,19 @@ message = (() => {
       return result;
    };
 
-   let updater = (timer) => {
-      let log = document.getElementById("log");
-      let beforeScroll = log.scrollTop;
-      let needsScroll =  (log.scrollTop + 10) > (log.scrollHeight - log.clientHeight);
+   function updater(timer) {
+      var log = document.getElementById("log");
+      var beforeScroll = log.scrollTop;
+      var needsScroll =  (log.scrollTop + 10) > (log.scrollHeight - log.clientHeight);
 
-      let item;
-      let t1, t2, t3;
+      var item;
+      var t1, t2, t3;
       t1 = merge(queues.Combat, queues.Loot);
       t2 = merge(queues.Notices, queues.Unlocks);
       t3 = merge(t1, t2);
-      let multiQueue = merge(t3, queues.Story);
+      var multiQueue = merge(t3, queues.Story);
 
-      let concatString = '';
+      var concatString = '';
       for (item in multiQueue) {
          concatString += multiQueue[item].HTMLstring + ' ';
       }
@@ -2379,8 +2379,8 @@ message = (() => {
       trimMessagesRAF('Loot');
       trimMessagesRAF('Combat');
 
-      let needsScrollTemp = needsScroll;
-      requestAnimationFrame(() => {
+      var needsScrollTemp = needsScroll;
+      requestAnimationFrame(function () {
          if (needsScrollTemp) {
             log.scrollTop = log.scrollHeight;
          } else {
@@ -2403,11 +2403,11 @@ message = (() => {
     * Queue up an item to be added to the message log
     * @param {id: int, type: String, HTMLstring: String} obj container object for message
     */
-   let addToQueue = (obj) => {
+   function addToQueue(obj) {
       obj.id = counter;
       counter++;
 
-      let queue = queues[obj.type];
+      var queue = queues[obj.type];
       if (queue === undefined) {
          console.log("Invalid type: " + obj.type);
       }
@@ -2497,7 +2497,6 @@ function trimMessagesRAF(what){
          }
       });
 	}
-   return messageCount - 20;
 }
 
 function filterMessage(what, updateOnly){ //send true for updateOnly
