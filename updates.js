@@ -2319,7 +2319,9 @@ function applyS5(){
 }
 
 message = (function () {
-   // These queues need to be opitimized.
+   // Optimized implementation of message written by 431741580 (VB-is-Terrible)
+   // If anything breaks, feel free to yell at him at 431741580derp@gmail.com
+
    var queues = {
       Story: [],
       Unlocks: [],
@@ -2330,7 +2332,13 @@ message = (function () {
    var requestID = null;
    var counter = 0;
 
-   function merge (l1, l2) {
+   /**
+    * Merge two arrays by the .id property
+    * @param  {Array} l1 List 1
+    * @param  {Array} l2 List 2
+    * @return {Array}    Merged List
+    */
+   function merge(l1, l2) {
       // Merge from mergeSort
       var result = [];
       var l1p = 0, l2p = 0;
@@ -2354,6 +2362,10 @@ message = (function () {
       return result;
    };
 
+	/**
+	 * Get and display all queued messages in queues
+	 * @param {DOMHighResTimeStamp} timer Time stamp given by requestAnimationFrame
+	 */
    function updater(timer) {
       var log = document.getElementById("log");
       var beforeScroll = log.scrollTop;
@@ -2401,7 +2413,7 @@ message = (function () {
 
    /**
     * Queue up an item to be added to the message log
-    * @param {id: int, type: String, HTMLstring: String} obj container object for message
+    * @param {{id: int, type: String, HTMLstring: String}} obj container object for message
     */
    function addToQueue(obj) {
       obj.id = counter;
