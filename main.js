@@ -35,7 +35,7 @@ document.getElementById("versionNumber").innerHTML = game.global.version;
 
 function autoSave() {
     if (game.options.menu.autoSave.enabled) save();
-    setTimeout(autoSave, 600000);
+    setTimeout(autoSave, 60000);
 }
 
 var lastOnlineSave = -1800000;
