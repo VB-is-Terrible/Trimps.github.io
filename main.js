@@ -22,8 +22,8 @@
 		<http://www.gnu.org/licenses/>. */
 "use strict";
 
-const TIMEOUT_MULTI = 1;
-const TIME_BOOST = 100;
+const TIMEOUT_MULTI = 10000000;
+const TIME_BOOST = 288000;
 if (typeof kongregate === 'undefined' && document.getElementById("boneBtn") !== null) {
 	var boneBtn = document.getElementById("getBonesBtn");
 	boneBtn.onclick = "";
@@ -5787,8 +5787,8 @@ function battleCoordinator(makeUp) {
 	if (game.talents.hyperspeed.purchased) num -= 100;
 	if (game.talents.hyperspeed2.purchased && (game.global.world <= Math.floor((game.global.highestLevelCleared + 1) * 0.5)))
 		{num -= 100;}
-	num /= TIME_BOOST;
-	while (game.global.battleCounter >= num) {
+	
+	if (game.global.battleCounter >= num) {
         game.global.battleCounter -= num; //Thanks grabz
         fight(makeUp);
     }
@@ -9965,6 +9965,8 @@ function gameLoop(makeUp, now) {
 
 
 function gameTimeout() {
+	
+	const ONE_DAY = 288000;
 	// Don't know where yo put this
 	game.global.isBeta = true;
 	if (game.options.menu.pauseGame.enabled) return;
@@ -9979,18 +9981,22 @@ function gameTimeout() {
 		return;
 	}
 	game.global.lastOnline = now;
-    var tick = 1000 / game.settings.speed;
-    game.global.time += tick;
-    var dif = (now - game.global.start) - game.global.time;
-    while (dif >= tick) {
-        gameLoop(true, now);
-        dif -= tick;
-        game.global.time += tick;
-		ctrlPressed = false;
-    }
-    gameLoop(null, now);
-    updateLabels();
-    setTimeout(gameTimeout, (tick - dif) * TIMEOUT_MULTI);
+	var tick = 1000 / game.settings.speed;
+	game.global.time += tick;
+	var dif = (now - game.global.start) - game.global.time;
+	
+	var count = 0;
+	while (count < ONE_DAY) {
+	  gameLoop(true, now);
+	  count++;
+	  game.global.time += tick;
+	ctrlPressed = false;
+	}
+	
+	dif %= tick;
+	gameLoop(null, now);
+	updateLabels();
+	setTimeout(gameTimeout, (tick - dif) * TIMEOUT_MULTI);
 }
 
 
