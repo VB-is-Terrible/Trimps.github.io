@@ -546,6 +546,7 @@ function load(saveString, autoLoad, fromPf) {
 	//End compatibility
 
 	//Test server only
+	game.global.isBeta = true;
 	//End test server only
 	//Temporary until next patch
 	if (!getCurrentMapObject()) {
@@ -5803,7 +5804,6 @@ function battleCoordinator(makeUp) {
 	if (game.talents.hyperspeed.purchased) num -= 100;
 	if (game.talents.hyperspeed2.purchased && (game.global.world <= Math.floor((game.global.highestLevelCleared + 1) * 0.5)))
 		{num -= 100;}
-	num /= TIME_BOOST;
 	while (game.global.battleCounter >= num) {
         game.global.battleCounter -= num; //Thanks grabz
         fight(makeUp);
@@ -9992,8 +9992,6 @@ function gameLoop(makeUp, now) {
 
 
 function gameTimeout() {
-	// Don't know where yo put this
-	game.global.isBeta = true;
 	if (game.options.menu.pauseGame.enabled) return;
 	var now = new Date().getTime();
 	//4432
@@ -10006,18 +10004,27 @@ function gameTimeout() {
 		return;
 	}
 	game.global.lastOnline = now;
-    var tick = 1000 / game.settings.speed;
-    game.global.time += tick;
-    var dif = (now - game.global.start) - game.global.time;
-    while (dif >= tick) {
-        gameLoop(true, now);
-        dif -= tick;
-        game.global.time += tick;
+	var tick = 1000 / game.settings.speed;
+	game.global.time += tick;
+	var dif = (now - game.global.start) - game.global.time;
+	var madeUp = 0;
+	while (dif >= tick) {
+		for (var i = 0; i < TIME_BOOST; i++) {
+			gameLoop(true, now);
+			madeUp++;
+		}
+		dif -= (tick);
+		game.global.time += tick;
 		ctrlPressed = false;
-    }
-    gameLoop(null, now);
-    updateLabels();
-    setTimeout(gameTimeout, (tick - dif) * TIMEOUT_MULTI);
+	}
+	for (var i = 0; i < TIME_BOOST - 1; i++) {
+		gameLoop(true, now);
+		madeUp++;
+	}
+	gameLoop(null, now);
+	updateLabels();
+	console.log("Gameloop, madeUp: " + madeUp);
+	setTimeout(gameTimeout, (tick - dif) * TIMEOUT_MULTI);
 }
 
 
