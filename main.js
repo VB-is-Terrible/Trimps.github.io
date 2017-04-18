@@ -8404,7 +8404,7 @@ function fadeIn(elem, speed) {
 	}
 	var totalTime = 100 * speed;
 	var start = performance.now()
-	var fadeInt = requestAnimationFrage(function (timer) {
+	var fadeInt = requestAnimationFrame(function (timer) {
 		var opacity = (timer - start) / totalTime;
 		if (opacity >= 1) {
 			clearInterval(fadeInt);
