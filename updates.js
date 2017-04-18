@@ -2318,158 +2318,86 @@ function applyS5(){
 	game.resources.metal.max = 562949953421312000;
 }
 
-message = (function () {
-   // Optimized implementation of message written by 431741580 (VB-is-Terrible)
-   // If anything breaks, feel free to yell at him at 431741580derp@gmail.com
 
-   var queues = {
-      Story: [],
-      Unlocks: [],
-      Notices: [],
-      Loot: [],
-      Combat: []
-   };
-   var requestID = null;
-   var counter = 0;
-
-   /**
-    * Merge two arrays by the .id property
-    * @param  {Array} l1 List 1
-    * @param  {Array} l2 List 2
-    * @return {Array}    Merged List
-    */
-   function merge(l1, l2) {
-      // Merge from mergeSort
-      var result = [];
-      var l1p = 0, l2p = 0;
-      while (l1.length > l1p && l2.length > l2p) {
-         if (l1[l1p].id < l2[l2p].id) {
-            result.push(l1[l1p]);
-            l1p++;
-         } else {
-            result.push(l2[l2p]);
-            l2p++;
-         }
-      }
-      while (l1.length > l1p) {
-         result.push(l1[l1p]);
-         l1p++;
-      }
-      while (l2.length > l2p) {
-         result.push(l2[l2p]);
-         l2p++;
-      }
-      return result;
-   };
-
-	/**
-	 * Get and display all queued messages in queues
-	 * @param {DOMHighResTimeStamp} timer Time stamp given by requestAnimationFrame
-	 */
-   function updater(timer) {
-      var log = document.getElementById("log");
-      var beforeScroll = log.scrollTop;
-      var needsScroll =  (log.scrollTop + 10) > (log.scrollHeight - log.clientHeight);
-
-      var item;
-      var t1, t2, t3;
-      t1 = merge(queues.Combat, queues.Loot);
-      t2 = merge(queues.Notices, queues.Unlocks);
-      t3 = merge(t1, t2);
-      var multiQueue = merge(t3, queues.Story);
-
-      var concatString = '';
-      for (item in multiQueue) {
-         concatString += multiQueue[item].HTMLstring + ' ';
-      }
-
-      log.innerHTML += concatString;
-      // I'm too lazy to manually calculate what happened in the DOM, so force a layoout
-
-      trimMessagesRAF('Unlocks');
-      trimMessagesRAF('Notices');
-      trimMessagesRAF('Loot');
-      trimMessagesRAF('Combat');
-
-      var needsScrollTemp = needsScroll;
-      requestAnimationFrame(function () {
-         if (needsScrollTemp) {
-            log.scrollTop = log.scrollHeight;
-         } else {
-            log.scrollTop = beforeScroll;
-         }
-      })
-
-      requestID = null;
-      queues = {
-         Story: [],
-         Unlocks: [],
-         Notices: [],
-         Loot: [],
-         Combat: []
-      };
-      needsScroll = false;
-   };
-
-   /**
-    * Queue up an item to be added to the message log
-    * @param {{id: int, type: String, HTMLstring: String}} obj container object for message
-    */
-   function addToQueue(obj) {
-      obj.id = counter;
-      counter++;
-
-      var queue = queues[obj.type];
-      if (queue === undefined) {
-         console.log("Invalid type: " + obj.type);
-      }
-      queue.push(obj);
-      if (!(obj.type == "Story")) {
-         if (queue.length > 20) {
-            queue.shift();
-         }
-      }
-      if (requestID === null) {
-         requestID = requestAnimationFrame(updater);
-      }
-   };
-
-   return (function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
-      if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
-      var log = document.getElementById("log");
-      var displayType = (game.global.messages[type].enabled) ? "block" : "none";
-      var prefix = "";
-      var addId = "";
-      if (messageString == "Game Saved!" || extraClass == 'save') {
-         addId = " id='saveGame'";
-         if (document.getElementById('saveGame') !== null){
+var pendingLogs = {
+    Loot: [],
+    Unlocks: [],
+    Combat: [],
+    Notices: [],
+    all: [],
+    RAF: null
+};
+ 
+function message(messageString, type, lootIcon, extraClass, extraTag, htmlPrefix) {
+if (extraTag && typeof game.global.messages[type][extraTag] !== 'undefined' && !game.global.messages[type][extraTag]) return;
+    var log = document.getElementById("log");
+    var displayType = (game.global.messages[type].enabled) ? "block" : "none";
+    var prefix = "";
+    var addId = "";
+    if (messageString == "Game Saved!" || extraClass == 'save') {
+        addId = " id='saveGame'";
+        if (document.getElementById('saveGame') !== null){
             log.removeChild(document.getElementById('saveGame'));
-         }
-      }
-      if (game.options.menu.timestamps.enabled){
-         messageString = ((game.options.menu.timestamps.enabled == 1) ? getCurrentTime() : updatePortalTimer(true)) + " " + messageString;
-      }
-      if (!htmlPrefix){
-         if (lootIcon && lootIcon.charAt(0) == "*") {
+        }
+    }
+    if (game.options.menu.timestamps.enabled){
+        messageString = ((game.options.menu.timestamps.enabled == 1) ? getCurrentTime() : updatePortalTimer(true)) + " " + messageString;
+    }
+    if (!htmlPrefix){
+        if (lootIcon && lootIcon.charAt(0) == "*") {
             lootIcon = lootIcon.replace("*", "");
             prefix =  "icomoon icon-";
-         }
-         else prefix = "glyphicon glyphicon-";
-         if (type == "Story") messageString = "<span class='glyphicon glyphicon-star'></span> " + messageString;
-         if (type == "Combat") messageString = "<span class='glyphicon glyphicon-flag'></span> " + messageString;
-         if (type == "Loot" && lootIcon) messageString = "<span class='" + prefix + lootIcon + "'></span> " + messageString;
-         if (type == "Notices"){
+        }
+        else prefix = "glyphicon glyphicon-";
+        if (type == "Story") messageString = "<span class='glyphicon glyphicon-star'></span> " + messageString;
+        if (type == "Combat") messageString = "<span class='glyphicon glyphicon-flag'></span> " + messageString;
+        if (type == "Loot" && lootIcon) messageString = "<span class='" + prefix + lootIcon + "'></span> " + messageString;
+        if (type == "Notices"){
             messageString = "<span class='glyphicon glyphicon-off'></span> " + messageString;
-         }
-      }
-      else messageString = htmlPrefix + " " + messageString;
-      addToQueue({
-         id: 0,
-         type: type,
-         HTMLstring: "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>"
-      });
-   })
-})();
+        }
+    }
+    else messageString = htmlPrefix + " " + messageString;
+    var messageHTML = "<span" + addId + " class='" + type + "Message message" +  " " + extraClass + "' style='display: " + displayType + "'>" + messageString + "</span>";
+    pendingLogs.all.push(messageHTML);
+    if (type != "Story"){
+        var pendingArray = pendingLogs[type];
+        pendingArray.push(pendingLogs.all.length - 1);
+        if (pendingArray.length > 10){
+            var index = pendingArray[0];
+            pendingLogs.all.splice(index, 1)
+            pendingArray.splice(0, 1);
+            adjustMessageIndexes(index);
+        }
+    }
+}
+ 
+function adjustMessageIndexes(index){
+    for (var item in pendingLogs){
+        if (item == "all" || item == "RAF") continue;
+        for (var x = 0; x < pendingLogs[item].length; x++){
+            if (pendingLogs[item][x] > index)
+                pendingLogs[item][x]--;
+        }
+    }
+}
+ 
+function postMessages(){
+    if (pendingLogs.RAF != null) cancelAnimationFrame(pendingLogs.RAF);
+    pendingLogs.RAF = requestAnimationFrame(function() {
+        var log = document.getElementById("log");
+        var needsScroll = ((log.scrollTop + 10) > (log.scrollHeight - log.clientHeight));
+        var pendingMessages = pendingLogs.all.join('');
+        log.innerHTML += pendingMessages;
+        pendingLogs.all = [];
+        for (var item in pendingLogs){
+            if (item == "all" || item == "RAF") continue;
+            if (pendingLogs[item].length)
+                trimMessages(item);
+            pendingLogs[item] = [];
+        }
+        if (needsScroll) log.scrollTop = log.scrollHeight;
+    });
+}
 
 function getCurrentTime(){
 	var date = new Date();
