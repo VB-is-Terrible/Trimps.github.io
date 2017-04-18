@@ -8404,14 +8404,16 @@ function fadeIn(elem, speed) {
 	}
 	var totalTime = 100 * speed;
 	var start = performance.now()
-	var fadeInt = requestAnimationFrame(function (timer) {
+	function ticker(timer) {
 		var opacity = (timer - start) / totalTime;
 		if (opacity >= 1) {
-			clearInterval(fadeInt);
 			elem.style.opacity = 1;
+			return;
 		}
 		elem.style.opacity = opacity;
-	});
+		requestAnimationFrame(ticker);
+	}
+	ticker();
 }
 
 function autoTrap() {
