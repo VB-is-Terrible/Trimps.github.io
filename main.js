@@ -8414,7 +8414,7 @@ function fadeIn(elem, speed) {
 		elem.style.opacity = opacity;
 		requestAnimationFrame(ticker);
 	}
-	ticker();
+	ticker(start);
 }
 
 function autoTrap() {
