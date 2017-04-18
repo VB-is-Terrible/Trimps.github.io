@@ -41,6 +41,7 @@ function autoSave() {
 var lastOnlineSave = -1800000;
 var isSaving = false;
 function save(exportThis, fromManual) {
+	game.global.isBeta = true;
 	isSaving = true;
     var saveString = JSON.stringify(game);
     var saveGame = JSON.parse(saveString);
