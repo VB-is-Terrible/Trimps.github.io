@@ -8394,22 +8394,24 @@ function affordOneTier(what, whereFrom, take) {
 }
 
 function fadeIn(elem, speed) {
-    var opacity = 0;
-    elem = document.getElementById(elem);
-    elem.style.opacity = 0;
-    if (elem.style.display == "none") elem.style.display = "block";
-    if (elem.style.visibility == "hidden") elem.style.visibility = "visible";
+	elem = document.getElementById(elem);
+	elem.style.opacity = 0;
+	if (elem.style.display == "none") elem.style.display = "block";
+	if (elem.style.visibility == "hidden") elem.style.visibility = "visible";
 	if (typeof game.options.menu.fadeIns && game.options.menu.fadeIns.enabled == 0) {
 		elem.style.opacity = 1;
 		return;
 	}
-    var fadeInt = setInterval(function () {
-        opacity = opacity + 0.01;
-        elem.style.opacity = opacity;
-        if (opacity >= 1) {
-            clearInterval(fadeInt);
-        }
-    }, speed);
+	var totalTime = 100 * speed;
+	var start = performance.now()
+	var fadeInt = requestAnimationFrage(function (timer) {
+		var opacity = (timer - start) / totalTime;
+		if (opacity >= 1) {
+			clearInterval(fadeInt);
+			elem.style.opacity = 1;
+		}
+		elem.style.opacity = opacity;
+	});
 }
 
 function autoTrap() {
