@@ -22,8 +22,8 @@
 		<http://www.gnu.org/licenses/>. */
 "use strict";
 
-const TIMEOUT_MULTI = 10000000;
-const TIME_BOOST = 288000;
+const TIMEOUT_MULTI = 1;
+const TIME_BOOST = 100;
 if (typeof kongregate === 'undefined' && document.getElementById("boneBtn") !== null) {
 	var boneBtn = document.getElementById("getBonesBtn");
 	boneBtn.onclick = "";
