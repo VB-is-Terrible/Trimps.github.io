@@ -2750,7 +2750,12 @@ function getNextGeneticistCost(){
 	return resolvePow(geneticist.cost.food, geneticist, 1);
 }
 
-function freeWorkspace(amount, getAmtFreed){
+/**
+ * Fire workers from miners/farmers/lumberjacks to free workspace
+ * @param  {int} amount Amount of workspaces to free
+ * @return {bool}       Whether the workspaces were freed
+ */
+function freeWorkspace(amount){
 	if (!amount) amount = 1;
 	var toCheck = [];
 	if (game.jobs.Miner.owned >= amount) toCheck.push('Miner');
@@ -2826,6 +2831,14 @@ function getTooltipJobText(what, toBuy) {
     return fullText;
 }
 
+/**
+ * Check if a job purchase can be afford
+ * @param  {str} what          	Name of Job
+ * @param  {bool} take          Return buyable amount instead of bool
+ * @param  {int} workspaces    	Number of workspaces
+ * @param  {bool} updatingLabel Whether to ignore workspaces when checking
+ * @return {int|bool}           Whether the purchase is possible | amount if take == True
+ */
 function canAffordJob(what, take, workspaces, updatingLabel) {
 	var ignoreWorkspaces = (game.jobs[what].allowAutoFire && game.options.menu.fireForJobs.enabled && updatingLabel);
 	if (workspaces <= 0 && !ignoreWorkspaces) return false;
