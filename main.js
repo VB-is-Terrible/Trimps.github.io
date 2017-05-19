@@ -2646,6 +2646,12 @@ function trapThings() {
     if (game.options.menu.progressBars.enabled) document.getElementById("trappingBar").style.width = (100 - ((game.global.timeLeftOnTrap / trimps.speed) * 100)) + "%";
 }
 
+/**
+ * [buyJob description]
+ * @param  {str} what 	     What job to purchase
+ * @param  {bool} confirmed	 Whether to ignore locking
+ * @param  {bool} noTip    	 Whether to make a tooltip
+ */
 function buyJob(what, confirmed, noTip) {
 	var checkAndFix = false;
 	if (game.options.menu.pauseGame.enabled) return;
