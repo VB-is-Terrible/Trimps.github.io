@@ -915,6 +915,12 @@ function unlockTooltip(){
 	game.global.lockTooltip = false;
 }
 
+/**
+ * Get or display current resource per second
+ * @param  {str} what  		Resource to display
+ * @param  {bool} rawNum	Whether to return loot per second or display info in tooltip
+ * @return {int|null}     	Loot per second if rawNum == true, else null
+ */
 function getPsString(what, rawNum) {
 	if (what == "helium") return;
 	var resOrder = ["food", "wood", "metal", "science", "gems", "fragments"];
