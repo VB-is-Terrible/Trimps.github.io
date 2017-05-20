@@ -1471,6 +1471,9 @@ function capitalizeFirstLetter(word){
 	return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
+/**
+ * Calculate and display the Max Trimps tooltip
+ */
 function getMaxTrimps() {
 	var trimps = game.resources.trimps;
 	var base = 10;
