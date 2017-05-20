@@ -7367,7 +7367,7 @@ var dailyModifiers = {
             chance: 1
         },
 		plague: { //Half of electricity
-			description: functstrength (strength) {
+			description: function (strength) {
                 return "Enemies stack a debuff with each attack, damaging Trimps for " + prettify(this.getstrengtht(strength, 1) * 100) + "% of total health per turn per stack, resets on Trimp death."
             },
             getMult: function (strength, stacks) {
