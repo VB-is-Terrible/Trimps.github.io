@@ -8628,6 +8628,10 @@ function getPlayerCritDamageMult(){
 	return critMult;
 }
 
+/**
+ * Updates Lead stacks and display
+ * @param  {bool} remove	Whether to remove a lead stack (if an world cell was passed)
+ */
 function manageLeadStacks(remove){
 	var challenge = game.challenges.Lead;
 
@@ -8640,8 +8644,9 @@ function manageLeadStacks(remove){
 			determinedBuff = document.getElementById("determinedBuff");
 		}
 		determinedBuff.style.display = "inline";
+	} else if (determinedBuff != null) {
+		determinedBuff.style.display = "none";
 	}
-	else if (determinedBuff != null) determinedBuff.style.display = "none";
 
 	if (challenge.stacks <= 0){
 		return;
@@ -8650,8 +8655,9 @@ function manageLeadStacks(remove){
 
 	if (elem === null) {
 		document.getElementById("badGuyName").innerHTML += '&nbsp;<span class="badge badBadge" id="leadBuff" onmouseover="tooltip(\'Momentum\', null, event)" onmouseout="tooltip(\'hide\')"><span id="leadStacks">' + challenge.stacks + '</span><span id="momentumIcon" class="icomoon icon-hourglass"></span></span>';
+	} else {
+		document.getElementById("leadStacks").innerHTML = challenge.stacks;
 	}
-	else	document.getElementById("leadStacks").innerHTML = challenge.stacks;
 	swapClass('icon-hourglass', 'icon-hourglass-' + (3 - Math.floor(challenge.stacks / 67)), document.getElementById('momentumIcon'));
 }
 
