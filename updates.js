@@ -842,6 +842,11 @@ function configMessages(){
 	}
 }
 
+/**
+ * Display the associated message
+ * @param  {str} what  Name of message
+ * @param  {Event} event Event to pass to Tooltip
+ */
 function messageConfigHover(what, event){
 	var text = "";
 	var title = "";
