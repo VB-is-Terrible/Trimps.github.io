@@ -7319,278 +7319,278 @@ function distributeToChallenges(amt) {
 
 var dailyModifiers = {
 	minDamage: {
-            description: function (str) {
-                return "Trimp min damage reduced by " + prettify(this.getMult(str) * 100) + "% (additive).";
+            description: function (strength) {
+                return "Trimp min damage reduced by " + prettify(this.getMult(strength) * 100) + "% (additive).";
             },
-            getMult: function (str) {
-                return 0.1 + ((str - 1) * 0.01);
+            getMult: function (strength) {
+                return 0.1 + ((strength - 1) * 0.01);
             },
-            getWeight: function (str) {
-				return (1 / ((1.2 + (1 - this.getMult(str))) / 2 / 1.1)) - 1;
+            getWeight: function (strength) {
+				return (1 / ((1.2 + (1 - this.getMult(strength))) / 2 / 1.1)) - 1;
             },
             minMaxStep: [41, 90, 1],
             chance: 1
         },
         maxDamage: {
-            description: function (str) {
-                return "Trimp max damage increased by " + prettify(this.getMult(str) * 100) + "% (additive).";
+            description: function (strength) {
+                return "Trimp max damage increased by " + prettify(this.getMult(strength) * 100) + "% (additive).";
             },
-            getMult: function (str) {
-                return str;
+            getMult: function (strength) {
+                return strength;
             },
-            getWeight: function (str) {
-                return (1 - ((1.2 + (1 + str)) / 2 / 1.1));
+            getWeight: function (strength) {
+                return (1 - ((1.2 + (1 + strength)) / 2 / 1.1));
             },
             minMaxStep: [1, 5, 0.25],
             chance: 1
         },
 		plague: { //Half of electricity
-			description: function (str) {
-                return "Enemies stack a debuff with each attack, damaging Trimps for " + prettify(this.getMult(str, 1) * 100) + "% of total health per turn per stack, resets on Trimp death."
+			description: functstrength (strength) {
+                return "Enemies stack a debuff with each attack, damaging Trimps for " + prettify(this.getstrengtht(strength, 1) * 100) + "% of total health per turn per stack, resets on Trimp death."
             },
-            getMult: function (str, stacks) {
-                return 0.01 * str * stacks;
+            getMult: function (strength, stacks) {
+                return 0.01 * strength * stacks;
 			},
-			getWeight: function (str) {
-				var count = (str < 2) ? 15 : ((str < 3) ? 11 : ((str < 4) ? 9 : ((str < 5) ? 8 : ((str < 7) ? 7 : ((str < 10) ? 6 : (str < 17) ? 5 : 4)))));
-				return ((10 / 8) + 6 - ((0.2 * count)/2) + ((((500 * count + 400) / count) / 500)-1) - ((10 - str) / 8)) / 1.75;
+			getWeight: function (strength) {
+				var count = (strength < 2) ? 15 : ((strength < 3) ? 11 : ((strength < 4) ? 9 : ((strength < 5) ? 8 : ((strength < 7) ? 7 : ((strength < 10) ? 6 : (strength < 17) ? 5 : 4)))));
+				return ((10 / 8) + 6 - ((0.2 * count)/2) + ((((500 * count + 400) / count) / 500)-1) - ((10 - strength) / 8)) / 1.75;
 			},
 			minMaxStep: [1, 10, 1],
 			chance: 0.6,
 			icon: "*bug2",
-			stackDesc: function (str, stacks) {
-				return "Your Trimps are taking " + prettify(this.getMult(str, stacks) * 100) + "% damage after each attack.";
+			stackDesc: function (strength, stacks) {
+				return "Your Trimps are taking " + prettify(this.getMult(strength, stacks) * 100) + "% damage after each attack.";
 			}
         },
 		weakness: {
-			description: function (str) {
-				return "Enemies stack a debuff with each attack, reducing Trimp attack by " + prettify(100 - this.getMult(str, 1) * 100) + "% per stack. Stacks cap at 9 and reset on Trimp death.";
+			description: function (strength) {
+				return "Enemies stack a debuff with each attack, reducing Trimp attack by " + prettify(100 - this.getMult(strength, 1) * 100) + "% per stack. Stacks cap at 9 and reset on Trimp death.";
 			},
-			getMult: function (str, stacks) {
-				return 1 - (0.01 * str * stacks);
+			getMult: function (strength, stacks) {
+				return 1 - (0.01 * strength * stacks);
 			},
-			getWeight: function (str) {
-				return str / 4;
+			getWeight: function (strength) {
+				return strength / 4;
 			},
 			minMaxStep: [1, 10, 1],
 			chance: 0.6,
 			icon: "fire",
-			stackDesc: function (str, stacks) {
-				return "Your Trimps have " + prettify(100 - this.getMult(str, stacks) * 100) + "% less attack.";
+			stackDesc: function (strength, stacks) {
+				return "Your Trimps have " + prettify(100 - this.getMult(strength, stacks) * 100) + "% less attack.";
 			}
 		},
 		large: {
-            description: function (str) {
-                return "All housing can store " + prettify(100 - this.getMult(str) * 100) + "% fewer Trimps";
+            description: function (strength) {
+                return "All housing can store " + prettify(100 - this.getMult(strength) * 100) + "% fewer Trimps";
             },
-            getMult: function(str) {
-                return 1 - (0.01 * str);
+            getMult: function(strength) {
+                return 1 - (0.01 * strength);
             },
-            getWeight: function (str) {
-                return (1 / this.getMult(str) - 1) * 2;
+            getWeight: function (strength) {
+                return (1 / this.getMult(strength) - 1) * 2;
             },
-            start: function (str) {
-                game.resources.trimps.maxMod = this.getMult(str);
+            start: function (strength) {
+                game.resources.trimps.maxMod = this.getMult(strength);
             },
-            abandon: function (str) {
+            abandon: function (strength) {
                 game.resources.trimps.maxMod = 1;
             },
             minMaxStep: [10, 60, 1],
             chance: 1
         },
 		dedication: {
-			description: function (str) {
-				return "Gain " + prettify((this.getMult(str) * 100) - 100) + "% more resources from gathering";
+			description: function (strength) {
+				return "Gain " + prettify((this.getMult(strength) * 100) - 100) + "% more resources from gathering";
 			},
-			getMult: function(str) {
-				return 1 + (0.1 * str);
+			getMult: function(strength) {
+				return 1 + (0.1 * strength);
 			},
-			getWeight: function (str) {
-				return 0.075 * str * -1;
+			getWeight: function (strength) {
+				return 0.075 * strength * -1;
 			},
 			minMaxStep: [5, 40, 1],
 			chance: 0.75
 		},
 		famine: {
-            description: function (str) {
-                return "Gain " + prettify(100 - (this.getMult(str) * 100)) + "% less Metal, Food, Wood, and Gems from all sources";
+            description: function (strength) {
+                return "Gain " + prettify(100 - (this.getMult(strength) * 100)) + "% less Metal, Food, Wood, and Gems from all sources";
             },
-            getMult: function (str) {
-                return 1 - (0.01 * str);
+            getMult: function (strength) {
+                return 1 - (0.01 * strength);
             },
-            getWeight: function (str) {
-                return (1 / this.getMult(str) - 1) / 2;
+            getWeight: function (strength) {
+                return (1 / this.getMult(strength) - 1) / 2;
             },
             minMaxStep: [40, 80, 1],
             chance: 2
         },
 		badStrength: {
-			description: function (str) {
-				return "Enemy attack increased by " + prettify((this.getMult(str) * 100) - 100) + "%.";
+			description: function (strength) {
+				return "Enemy attack increased by " + prettify((this.getMult(strength) * 100) - 100) + "%.";
 			},
-			getMult: function (str) {
-				return 1 + (0.2 * str);
+			getMult: function (strength) {
+				return 1 + (0.2 * strength);
 			},
-			getWeight: function (str){
-				return 0.1 * str;
+			getWeight: function (strength){
+				return 0.1 * strength;
 			},
 			minMaxStep: [5, 15, 1],
 			chance: 1
 		},
 		badHealth: {
-			description: function (str) {
-				return "Enemy health increased by " + prettify((this.getMult(str) * 100) - 100) + "%.";
+			description: function (strength) {
+				return "Enemy health increased by " + prettify((this.getMult(strength) * 100) - 100) + "%.";
 			},
-			getMult: function (str) {
-				return 1 + (0.2 * str);
+			getMult: function (strength) {
+				return 1 + (0.2 * strength);
 			},
-			getWeight: function (str){
-				return 0.2 * str;
+			getWeight: function (strength){
+				return 0.2 * strength;
 			},
 			minMaxStep: [3, 15, 1],
 			chance: 1
 		},
 		badMapStrength: {
-            description: function (str) {
-                return "Enemy attack in maps increased by " + prettify((this.getMult(str) * 100) - 100) + "%.";
+            description: function (strength) {
+                return "Enemy attack in maps increased by " + prettify((this.getMult(strength) * 100) - 100) + "%.";
             },
-            getMult: function (str) {
-                return 1 + (0.3 * str);
+            getMult: function (strength) {
+                return 1 + (0.3 * strength);
             },
-            getWeight: function (str){
-                return (0.1 * (1 + 1/3)) * str;
+            getWeight: function (strength){
+                return (0.1 * (1 + 1/3)) * strength;
             },
             minMaxStep: [3, 15, 1],
             chance: 1
         },
         badMapHealth: {
-            description: function (str) {
-                return "Enemy health in maps increased by " + prettify((this.getMult(str) * 100) - 100) + "%.";
+            description: function (strength) {
+                return "Enemy health in maps increased by " + prettify((this.getMult(strength) * 100) - 100) + "%.";
             },
-            getMult: function (str) {
-                return 1 + (0.3 * str);
+            getMult: function (strength) {
+                return 1 + (0.3 * strength);
             },
-            getWeight: function (str){
-                return (0.3 * str) * (5 / 8);
+            getWeight: function (strength){
+                return (0.3 * strength) * (5 / 8);
             },
             minMaxStep: [3, 10, 1],
             chance: 1
         },
 		crits: {
-            description: function (str) {
-                return "Enemies have a 25% chance to crit for " + prettify(this.getMult(str) * 100) + "% of normal damage";
+            description: function (strength) {
+                return "Enemies have a 25% chance to crit for " + prettify(this.getMult(strength) * 100) + "% of normal damage";
             },
-            getMult: function (str) {
-                return 1 + (0.5 * str);
+            getMult: function (strength) {
+                return 1 + (0.5 * strength);
             },
-            getWeight: function (str) {
-                return 0.15 * this.getMult(str);
+            getWeight: function (strength) {
+                return 0.15 * this.getMult(strength);
             },
             minMaxStep: [1, 24, 1],
             chance: 0.75
         },
         bogged: {
-            description: function (str) {
-                return "Your Trimps lose " + prettify(this.getMult(str) * 100) + "% of their max health after each attack.";
+            description: function (strength) {
+                return "Your Trimps lose " + prettify(this.getMult(strength) * 100) + "% of their max health after each attack.";
             },
-            getMult: function (str) {
-                return 0.01 * str;
+            getMult: function (strength) {
+                return 0.01 * strength;
             },
-            getWeight: function (str) {
-                var count = Math.ceil(1 / this.getMult(str));
+            getWeight: function (strength) {
+                var count = Math.ceil(1 / this.getMult(strength));
                 return (6 - ((0.2 * (count > 60 ? 60 : count) / 2)) + ((((500 * count + 400) / count) / 500)-1)) / 1.5;
             },
             minMaxStep: [1, 5, 1],
             chance: 0.75
         },
 		dysfunctional: {
-            description: function (str) {
-                return "Your Trimps breed " + prettify(100 - (this.getMult(str) * 100)) + "% slower";
+            description: function (strength) {
+                return "Your Trimps breed " + prettify(100 - (this.getMult(strength) * 100)) + "% slower";
             },
-            getMult: function (str) {
-                return 1 - (str * 0.05);
+            getMult: function (strength) {
+                return 1 - (strength * 0.05);
             },
-            getWeight: function (str){
-                return ((1 / this.getMult(str))-1)/6;
+            getWeight: function (strength){
+                return ((1 / this.getMult(strength))-1)/6;
             },
             minMaxStep: [10, 18, 1],
             chance: 1
         },
 		oddTrimpNerf: {
-            description: function (str) {
-                return "Trimps have " + prettify(100 - (this.getMult(str) * 100)) + "% less attack on odd numbered zones";
+            description: function (strength) {
+                return "Trimps have " + prettify(100 - (this.getMult(strength) * 100)) + "% less attack on odd numbered zones";
             },
-            getMult: function (str) {
-                return 1 - (str * 0.02);
+            getMult: function (strength) {
+                return 1 - (strength * 0.02);
             },
-            getWeight: function (str){
-                return (1 / this.getMult(str) - 1) / 1.5;
+            getWeight: function (strength){
+                return (1 / this.getMult(strength) - 1) / 1.5;
             },
             minMaxStep: [15, 40, 1],
             chance: 1
         },
         evenTrimpBuff: {
-            description: function (str) {
-                return "Trimps have " + prettify((this.getMult(str) * 100) - 100) + "% more attack on even numbered zones";
+            description: function (strength) {
+                return "Trimps have " + prettify((this.getMult(strength) * 100) - 100) + "% more attack on even numbered zones";
             },
-            getMult: function (str) {
-                return 1 + (str * 0.2);
+            getMult: function (strength) {
+                return 1 + (strength * 0.2);
             },
-            getWeight: function (str){
-                return (this.getMult(str) - 1) * -1;
+            getWeight: function (strength){
+                return (this.getMult(strength) - 1) * -1;
             },
             minMaxStep: [1, 10, 1],
             chance: 1
         },
 		karma: {
-			description: function (str) {
-				return 'Gain a stack after killing an enemy, increasing all non Helium loot by ' + prettify((this.getMult(str, 1) * 100) - 100) + '%. Stacks cap at ' + this.getMaxStacks(str) + ', and reset after clearing a zone.';
+			description: function (strength) {
+				return 'Gain a stack after killing an enemy, increasing all non Helium loot by ' + prettify((this.getMult(strength, 1) * 100) - 100) + '%. Stacks cap at ' + this.getMaxStacks(strength) + ', and reset after clearing a zone.';
 			},
-			stackDesc: function (str, stacks){
-				return "Your Trimps are finding " + prettify((this.getMult(str, stacks) * 100) - 100) + "% more loot!";
+			stackDesc: function (strength, stacks){
+				return "Your Trimps are finding " + prettify((this.getMult(strength, stacks) * 100) - 100) + "% more loot!";
 			},
-			getMaxStacks: function (str) {
-				return Math.floor((str % 9) * 25) + 300;
+			getMaxStacks: function (strength) {
+				return Math.floor((strength % 9) * 25) + 300;
 			},
-			getMult: function (str, stacks) {
-				var realStrength = Math.ceil(str / 9);
+			getMult: function (strength, stacks) {
+				var realStrength = Math.ceil(strength / 9);
 				return 1 + (0.0015 * realStrength * stacks);
 			},
-			getWeight: function (str){
-				return (this.getMult(str, this.getMaxStacks(str)) - 1) / -2;
+			getWeight: function (strength){
+				return (this.getMult(strength, this.getMaxStacks(strength)) - 1) / -2;
 			},
 			icon: "*arrow-up",
 			minMaxStep: [1, 45, 1],
 			chance: 1
 		},
 		toxic: {
-			description: function (str) {
-				return "Gain a stack after killing an enemy, reducing breed speed by " + prettify(100 - (this.getMult(str, 1) * 100)) + '% (compounding). Stacks cap at ' + this.getMaxStacks(str) + ', and reset after clearing a zone.';
+			description: function (strength) {
+				return "Gain a stack after killing an enemy, reducing breed speed by " + prettify(100 - (this.getMult(strength, 1) * 100)) + '% (compounding). Stacks cap at ' + this.getMaxStacks(strength) + ', and reset after clearing a zone.';
 			},
-			stackDesc: function (str, stacks){
-				return "Your Trimps are breeding " + prettify(100 - (this.getMult(str, stacks) * 100)) + "% slower.";
+			stackDesc: function (strength, stacks){
+				return "Your Trimps are breeding " + prettify(100 - (this.getMult(strength, stacks) * 100)) + "% slower.";
 			},
-			getMaxStacks: function (str) {
-				return Math.floor((str % 9) * 25) + 300;
+			getMaxStacks: function (strength) {
+				return Math.floor((strength % 9) * 25) + 300;
 			},
-			getMult: function (str, stacks) {
-				var realStrength = Math.ceil(str / 9);
+			getMult: function (strength, stacks) {
+				var realStrength = Math.ceil(strength / 9);
 				return Math.pow((1 - 0.001 * realStrength), stacks);
 			},
-			getWeight: function (str){
-				return (1 / this.getMult(str, this.getMaxStacks(str)) - 1) / 6;
+			getWeight: function (strength){
+				return (1 / this.getMult(strength, this.getMaxStacks(strength)) - 1) / 6;
 			},
 			icon: "*radioactive",
 			minMaxStep: [1, 45, 1],
 			chance: 1
 		},
 		bloodthirst: {
-			description: function (str) {
-				return "Enemies gain a stack of Bloodthirst whenever Trimps die. Every " + this.getFreq(str) + " stacks, enemies will heal to full and gain an additive 50% attack. Stacks cap at " + this.getMaxStacks(str) + " and reset after killing an enemy.";
+			description: function (strength) {
+				return "Enemies gain a stack of Bloodthirst whenever Trimps die. Every " + this.getFreq(strength) + " stacks, enemies will heal to full and gain an additive 50% attack. Stacks cap at " + this.getMaxStacks(strength) + " and reset after killing an enemy.";
 			},
-			stackDesc: function (str, stacks) {
-				var freq = this.getFreq(str);
-				var max = this.getMaxStacks(str);
+			stackDesc: function (strength, stacks) {
+				var freq = this.getFreq(strength);
+				var max = this.getMaxStacks(strength);
 				var text = "This bad guy";
 				if (stacks < max) {
 					var next = (freq - (stacks % freq));
@@ -7598,23 +7598,23 @@ var dailyModifiers = {
 				}
 				if (stacks >= freq){
 					if (stacks < max) text += ", and";
-					text += " currently has " + prettify((this.getMult(str, stacks) * 100) - 100) + "% more attack";
+					text += " currently has " + prettify((this.getMult(strength, stacks) * 100) - 100) + "% more attack";
 				}
 				text += ".";
 				return text;
 			},
-			getMaxStacks: function (str) {
-				return (this.getFreq(str) * (2 + Math.floor(str / 2)));
+			getMaxStacks: function (strength) {
+				return (this.getFreq(strength) * (2 + Math.floor(strength / 2)));
 			},
-			getFreq: function(str){
-				return 10 - str;
+			getFreq: function(strength){
+				return 10 - strength;
 			},
-			getMult: function (str, stacks){
-				var count = Math.floor(stacks / this.getFreq(str));
+			getMult: function (strength, stacks){
+				var count = Math.floor(stacks / this.getFreq(strength));
 				return 1 + (0.5 * count);
 			},
-			getWeight: function (str) {
-				return 0.5 + (0.25 * Math.floor(str / 2));
+			getWeight: function (strength) {
+				return 0.5 + (0.25 * Math.floor(strength / 2));
 			},
 			minMaxStep: [1, 7, 1],
 			chance: 1,
@@ -7622,20 +7622,20 @@ var dailyModifiers = {
 			iconOnEnemy: true
 		},
 		explosive: {
-			description: function (str) {
-				var text = "Enemies instantly deal " + prettify(this.getMult(str) * 100) + "% of their attack damage when killed";
-				if (str > 15) {
+			description: function (strength) {
+				var text = "Enemies instantly deal " + prettify(this.getMult(strength) * 100) + "% of their attack damage when killed";
+				if (strength > 15) {
 					text += " unless your block is as high as your maximum health";
 				}
 				text += ".";
 				return text;
 			},
-			getMult: function (str) {
-				return str;
+			getMult: function (strength) {
+				return strength;
 			},
-			getWeight: function (str) {
-				var mult = this.getMult(str);
-				if (str <= 15){
+			getWeight: function (strength) {
+				var mult = this.getMult(strength);
+				if (strength <= 15){
 					return (3/20 * mult) + (1/4);
 				}
 				else {
@@ -7646,78 +7646,78 @@ var dailyModifiers = {
 			chance: 1
 		},
 		slippery: {
-			description: function (str) {
-				return "Enemies have a " + prettify(this.getMult(str) * 100) + "% chance to dodge your attacks on " + ((str <= 15) ? "odd" : "even") + " zones.";
+			description: function (strength) {
+				return "Enemies have a " + prettify(this.getMult(strength) * 100) + "% chance to dodge your attacks on " + ((strength <= 15) ? "odd" : "even") + " zones.";
 			},
-			getMult: function (str){
-				if (str > 15) str -= 15;
-				return 0.02 * str;
+			getMult: function (strength){
+				if (strength > 15) strength -= 15;
+				return 0.02 * strength;
 			},
-			getWeight: function (str) {
-				return (1 / (1 - this.getMult(str)) - 1) * 10 / 1.5;
+			getWeight: function (strength) {
+				return (1 / (1 - this.getMult(strength)) - 1) * 10 / 1.5;
 			},
 			minMaxStep: [1, 30, 1],
 			chance: 1
 		},
 		rampage: {
-			description: function (str) {
-				return "Gain a stack after killing an enemy, increasing Trimp attack by " + prettify((this.getMult(str, 1) * 100) - 100) + '% (additive). Stacks cap at ' + this.getMaxStacks(str) + ', and reset when your Trimps die.';
+			description: function (strength) {
+				return "Gain a stack after killing an enemy, increasing Trimp attack by " + prettify((this.getMult(strength, 1) * 100) - 100) + '% (additive). Stacks cap at ' + this.getMaxStacks(strength) + ', and reset when your Trimps die.';
 			},
-			stackDesc: function (str, stacks){
-				return "Your Trimps are dealing " + prettify((this.getMult(str, stacks) * 100) - 100) + "% more damage.";
+			stackDesc: function (strength, stacks){
+				return "Your Trimps are dealing " + prettify((this.getMult(strength, stacks) * 100) - 100) + "% more damage.";
 			},
-			getMaxStacks: function (str) {
-				return Math.floor((str % 10 + 1) * 10);
+			getMaxStacks: function (strength) {
+				return Math.floor((strength % 10 + 1) * 10);
 			},
-			getMult: function (str, stacks) {
-				var realStrength = Math.ceil(str / 10);
+			getMult: function (strength, stacks) {
+				var realStrength = Math.ceil(strength / 10);
 				return 1 + (0.01 * realStrength * stacks);
 			},
-			getWeight: function (str){
-				return (1 - this.getMult(str, 1)) * this.getMaxStacks(str);
+			getWeight: function (strength){
+				return (1 - this.getMult(strength, 1)) * this.getMaxStacks(strength);
 			},
 			icon: "*fire",
 			minMaxStep: [1, 40, 1],
 			chance: 1
 		},
 		mutimps: {
-			description: function (str) {
-				var size = str % 5;
+			description: function (strength) {
+				var size = strength % 5;
 				if (size == 0) size = "";
 				else size = "the first " + prettify(size * 2) + " rows of";
 
-				var name = (str < 4) ? "Mutimps" : "Hulking Mutimps";
+				var name = (strength < 4) ? "Mutimps" : "Hulking Mutimps";
 				return "40% of bad guys in " + size + " the World will be mutated in to " + name + ".";
 			},
-			getWeight: function (str) {
-				return (str / 10) * 1.5;
+			getWeight: function (strength) {
+				return (strength / 10) * 1.5;
 			},
-			getMaxCellNum: function (str) {
-				if (str > 5) str -= 5;
-				str--;
+			getMaxCellNum: function (strength) {
+				if (strength > 5) strength -= 5;
+				strength--;
 				var values = [19, 39, 59, 79, 99];
-				return values[str];
+				return values[strength];
 			},
 			minMaxStep: [1, 10, 1],
 			chance: 1
 		},
 		empower: {
 			description: function (str) {
-				return "All enemies gain " + str + " stacks of Empower whenever your Trimps die in the World. Empower increases the attack and health of bad guys in the World by 0.2% per stack, can stack to 9999, and never resets.";
+				return "All enemies gain " + strength + " stacks of Empower whenever your Trimps die in the World. Empower increases the attack and health of bad guys in the World by 0.2% per stack, can stack to 9999, and never resets.";
 			},
-			getWeight: function (str) {
-				return (str / 6) * 2;
+			getWeight: function (strength) {
+				return (strength / 6) * 2;
 			},
-			stackDesc: function (str, stacks){
-				return "This bad guy is Empowered and has " + prettify((this.getMult(str, stacks) * 100) - 100) + "% more health and attack.";
+			stackDesc: function (strength, stacks){
+				return "This bad guy is Empowered and has " + prettify((this.getMult(strength, stacks) * 100) - 100) + "% more health and attack.";
 			},
-			stacksToAdd: function (str){
-				return str;
+			stacksToAdd: function (strength){
+				return strength;
 			},
-			getMult: function (str, stacks){
+			getMult: function (strength, stacks){
 				return 1 + (0.002 * stacks);
 			},
-			getMaxStacks: function (str) {
+			getMaxStacks: function (strength) {
 				return 9999;
 			},
 			worldStacksOnly: true,
@@ -7727,15 +7727,15 @@ var dailyModifiers = {
 			chance: 1
 		},
 		pressure: {
-			description: function (str) {
-				return "Trimps gain a stack of Pressure every " + Math.round(this.timePerStack(str)) + " seconds. Each stack of pressure reduces Trimp health by 1%. Max of " + Math.round(this.getMaxStacks(str)) + " stacks, stacks reset after clearing a zone.";
+			description: function (strength) {
+				return "Trimps gain a stack of Pressure every " + Math.round(this.timePerStack(strength)) + " seconds. Each stack of pressure reduces Trimp health by 1%. Max of " + Math.round(this.getMaxStacks(strength)) + " stacks, stacks reset after clearing a zone.";
 			},
-			getWeight: function(str){
-				var time = (105 - this.timePerStack(str));
-				var stacks = this.getMaxStacks(str);
+			getWeight: function(strength){
+				var time = (105 - this.timePerStack(strength));
+				var stacks = this.getMaxStacks(strength);
 				return (((time * 1.3) + stacks) / 200);
 			},
-			getMult: function(str, stacks){
+			getMult: function(strength, stacks){
 				return Math.pow(0.99, stacks);
 			},
 			addSecond: function(){
@@ -7762,8 +7762,8 @@ var dailyModifiers = {
 						global.soldierHealth = 0;
 				}
 			},
-			timePerStack: function(str){
-				var thisStr = Math.ceil(str / 4) - 1;
+			timePerStack: function(strength){
+				var thisStr = Math.ceil(strength / 4) - 1;
 				return (45 + (thisStr * 5));
 			},
 			resetTimer: function(){
@@ -7772,11 +7772,11 @@ var dailyModifiers = {
 				modifier.stacks = 0;
 				updateDailyStacks('pressure');
 			},
-			stackDesc: function(str, stacks){
-				return "Your Trimps are under a lot of pressure. Maximum health is reduced by " + prettify((1 - this.getMult(str, stacks)) * 100) + "%.";
+			stackDesc: function(strength, stacks){
+				return "Your Trimps are under a lot of pressure. Maximum health is reduced by " + prettify((1 - this.getMult(strength, stacks)) * 100) + "%.";
 			},
-			getMaxStacks: function(str){
-				var thisStr = Math.floor(str % 4);
+			getMaxStacks: function(strength){
+				var thisStr = Math.floor(strength % 4);
 				return (45 + (thisStr * 5));
 			},
 			icon: "*heart3",
@@ -7784,17 +7784,17 @@ var dailyModifiers = {
 			chance: 1
 		},
 		mirrored: {
-			description: function (str) {
-				return "Enemies have a" + (str.toString()[0] == '8' ? 'n' : '') + " " + prettify(this.getReflectChance(str)) + "% chance to reflect an attack, dealing " + prettify(this.getMult(str) * 100) + "% of damage taken back to your Trimps.";
+			description: function (strength) {
+				return "Enemies have a" + (strength.toString()[0] == '8' ? 'n' : '') + " " + prettify(this.getReflectChance(strength)) + "% chance to reflect an attack, dealing " + prettify(this.getMult(strength) * 100) + "% of damage taken back to your Trimps.";
 			},
-			getReflectChance: function(str){
-				return (Math.ceil(str / 10)) * 10;
+			getReflectChance: function(strength){
+				return (Math.ceil(strength / 10)) * 10;
 			},
-			getMult: function(str){
-				return ((str % 10) + 1) / 10;
+			getMult: function(strength){
+				return ((strength % 10) + 1) / 10;
 			},
-			getWeight: function(str){
-				return ((((this.getReflectChance(str) + 90) / 100) * 0.85) * ((this.getMult(str) + 0.9) * 0.85));
+			getWeight: function(strength){
+				return ((((this.getReflectChance(strength) + 90) / 100) * 0.85) * ((this.getMult(strength) + 0.9) * 0.85));
 			},
 			testWeights: function(){
 				var min = 0;
@@ -7813,34 +7813,34 @@ var dailyModifiers = {
 				console.log(results);
 				return "Min: " + min + ", Max: " + max;
 			},
-			reflectDamage: function(str, attack){
-				if (Math.floor(Math.random() * 100) >= this.getReflectChance(str))
+			reflectDamage: function(strength, attack){
+				if (Math.floor(Math.random() * 100) >= this.getReflectChance(strength))
 					return 0;
-				return this.getMult(str) * attack;
+				return this.getMult(strength) * attack;
 			},
 			minMaxStep: [1, 100, 1],
 			chance: 1
 		},
 		metallicThumb: {
-			description: function (str) {
-				return "Equipment is " + prettify((1 - this.getMult(str)) * 100) + "% cheaper.";
+			description: function (strength) {
+				return "Equipment is " + prettify((1 - this.getMult(strength)) * 100) + "% cheaper.";
 			},
-			getWeight: function (str) {
-				return ((str + 3) / 26);
+			getWeight: function (strength) {
+				return ((strength + 3) / 26);
 			},
-			getMult: function(str){
-				return 1 - (str/100 * 5);
+			getMult: function(strength){
+				return 1 - (strength/100 * 5);
 			},
 			minMaxStep: [1, 10, 1],
 			chance: 1
 		}
 /* 		disarmed: {
 			equipmentList: ["Boots", "Mace", "Helmet", "Polearm", "Pants", "Battleaxe", "Shoulderguards", "Greatsword", "Breastplate", "Arbalest", "Gambeson"],
-			description: function (str) {
+			description: function (strength) {
 				return "You can't use something"
 			},
-			getBannedEquipment(str, checkOne){
-				if (checkOne) return (this.equipmentList.indexOf(checkOne) < str);
+			getBannedEquipment(strength, checkOne){
+				if (checkOne) return (this.equipmentList.indexOf(checkOne) < strength);
 			},
 			minMaxStep: [1, 11, 1],
 			chance: 1
