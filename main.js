@@ -2764,13 +2764,35 @@ function getNextGeneticistCost(){
 function freeWorkspace(amount){
 	if (!amount) amount = 1;
 	var toCheck = [];
-	if (game.jobs.Miner.owned >= amount) toCheck.push('Miner');
-	if (game.jobs.Farmer.owned >= amount) toCheck.push('Farmer');
-	if (game.jobs.Lumberjack.owned >= amount) toCheck.push('Lumberjack');
-	if (toCheck.length == 0) return false;
-	var selected = toCheck[Math.floor(Math.random() * toCheck.length)];
-	game.jobs[selected].owned -= amount;
-	game.resources.trimps.employed -= amount;
+	var total = 0;
+	var jobs = [];
+	var jobNames = ['Miner', 'Farmer', 'Lumberjack'];
+	var sort = function (a, b) {
+		return a.amount - b.amount;
+	};
+
+	for (var i = 0; i < jobNames.length; i++) {
+		jobs.push({
+			name: jobNames[i],
+			amount: game.jobs[jobNames[i]].owned
+		});
+		total += game.jobs[jobNames[i]].owned;
+	}
+
+	if (total < amount) return false;
+	jobs.sort(sort);
+
+	for (var i = 0; i < jobs.length && amount > 0; i++) {
+		var selected = jobs[i].name;
+		var fireAmount = amount;
+		if (jobs[i].amount < amount) {
+			fireAmount = jobs[i].amount;
+		}
+
+		game.jobs[selected].owned -= amount;
+		game.resources.trimps.employed -= amount;
+		amount -= fireAmount;
+	}
 	return true;
 }
 
