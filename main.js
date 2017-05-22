@@ -6928,7 +6928,7 @@ function nextWorld() {
 		assignExtraWorkers()
 	}
 	if (game.global.challengeActive == "Lead"){
-		if ((game.global.world % 2) == 0) game.challenges.Lead.stacks = game.challenges.Lead.stacks = 201;
+		if ((game.global.world % 2) == 0) game.challenges.Lead.stacks = 201;
 		manageLeadStacks();
 	}
 	if (game.global.challengeActive == "Decay"){
