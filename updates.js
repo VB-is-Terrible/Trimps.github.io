@@ -1845,6 +1845,11 @@ function swapNotation(updateOnly){
 	if (game.global.fighting) updateAllBattleNumbers();
 }
 
+/**
+ * Format a number for display
+ * @param  {int} number Number to be formatted
+ * @return {str}        HTMLString representing the number
+ */
 function prettify(number) {
 	var numberTmp = number;
 	if (!isFinite(number)) return "<span class='icomoon icon-infinity'></span>";
@@ -1932,15 +1937,24 @@ function romanNumeral(number){
 	}
 	return numeral;
 }
-
+/**
+ * Formats the number, limiting decimal digits, up to 2 if number < 10
+ * @param  {int} number Number to be formated
+ * @return {str}        Formatted number
+ */
 function prettifySub(number){
 	number = parseFloat(number);
 	var floor = Math.floor(number);
 	if (number === floor) // number is an integer, just show it as-is
 		return number;
-	var precision = 3 - floor.toString().length; // use the right number of digits
+	/**
+	 * Number of decimal digits to display
+	 * @type {int}
+	 */
+	var precision = Math.max(0, 3 - floor.toString().length); // use the right number of digits
 
-	return number.toFixed(3 - floor.toString().length);
+	return number.toFixed(precision);
+
 }
 
 function resetGame(keepPortal) {
