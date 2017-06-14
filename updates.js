@@ -3730,20 +3730,23 @@ function swapClass(prefix, newClass, elem) {
 	}
 	elem.className = className;
 }
-
+/**
+ * Updates the spin animation on an element
+ * @param  {HTMLElement} elem		Element to be spun
+ * @param  {int} currentSeconds		Current time in the animation loop
+ * @param  {int} totalSeconds		Total elngth of the animation
+ * @param  {int} frameTime    		Frame duration of animation
+ */
 function goRadial(elem, currentSeconds, totalSeconds, frameTime){
 
-        if (currentSeconds <= 0) currentSeconds = 0;
-        elem.style.transition = "";
-        elem.style.transform = "rotate(" + timeToDegrees(currentSeconds, totalSeconds) + "deg)";
-        setTimeout(
-            (function(ft, cs, ts) {
-                return function() {
-                    elem.style.transform = "rotate(" + timeToDegrees(cs + ft / 1000, ts) + "deg)";
-                    elem.style.transition = cs < 0.1 ? "" : "transform " + ft + "ms linear";
-                }
-            })(frameTime, currentSeconds, totalSeconds).bind(this)
-        , 0);
+    if (currentSeconds <= 0) currentSeconds = 0;
+    elem.style.transition = "";
+    elem.style.transform = "rotate(" + timeToDegrees(currentSeconds, totalSeconds) + "deg)";
+	apply = function () {
+		elem.style.transform = "rotate(" + timeToDegrees(currentSeconds + frameTime / 1000, totalSeconds) + "deg)";
+		elem.style.transition = currentSeconds < 0.1 ? "" : "transform " + frameTime + "ms linear";
+	}
+	requestAnimationFrame(apply);
 }
 
 function isObjectEmpty(obj){
