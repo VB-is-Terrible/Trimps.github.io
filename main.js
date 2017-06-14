@@ -5182,6 +5182,7 @@ function showGeneratorUpgradeInfo(item, permanent){
 	lastViewedDGUpgrade = [item, permanent];
 }
 
+// TODO: Needs TLC
 var thisTime = 0;
 function updateNextGeneratorTickTime(){
     //update tick time
