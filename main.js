@@ -10469,6 +10469,11 @@ document.addEventListener('keydown', function(e) {
 			ctrlPressed = true;
 			checkButtons("upgrades");
 			break;
+		case 18:
+			//Alt
+			ctrlPressed = true;
+			checkButtons("upgrades");
+			break;
 		case 49:
 		case 88:
 		case 97:
@@ -10506,7 +10511,7 @@ document.addEventListener('keyup', function(e) {
 		if (game.options.menu.tooltips.enabled == false) cancelTooltip();
 		shiftPressed = false;
 	}
-	if (e.keyCode == 17 || e.keyCode == 224 || e.keyCode == 91 || e.keyCode == 93){
+	if ([17,  224, 91, 93, 18].indexOf(e.keyCode) !== -1){
 		ctrlPressed = false;
 		checkButtons("upgrades");
 	}
