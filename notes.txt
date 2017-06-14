@@ -1,0 +1,7 @@
+Global references
+
+Flags for screen state
+	portalWindowOpen: flag for portal screen
+	trimpAchievementsOpen: flag for achivements screen
+	heirloomsShown: flag for heirloom screen
+	trimpStatsDisplayed: flag for stats screen
