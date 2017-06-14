@@ -2669,13 +2669,13 @@ function buyJob(what, confirmed, noTip) {
 		if (game.resources.trimps.employed < 0) game.resources.trimps.employed = 0;
 		return;
 	}
-	var workspaces = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+	var workspaces = game.workspaces;
 	var firingForJobs = false;
 	var fireAmt;
 	if (game.options.menu.fireForJobs.enabled && game.jobs[what].allowAutoFire){
 		purchaseAmt = (game.global.buyAmt == "Max") ? calculateMaxAfford(game.jobs[what], false, false, true) : game.global.buyAmt;
 		if (workspaces < purchaseAmt) {
-			workspaces = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+			workspaces = game.workspaces;
 			fireAmt = purchaseAmt - workspaces;
 			// Check to see if there are enough workers to fire
 			if (!((game.jobs.Miner.owned + game.jobs.Farmer.owned + game.jobs.Lumberjack.owned) < fireAmt)) {
@@ -2712,7 +2712,7 @@ function buyJob(what, confirmed, noTip) {
 
 	if (!noTip) tooltip(what, "jobs", "update");
 	if (checkAndFix){
-		workspaces = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+		workspaces = game.workspaces;
 		if (workspaces < 0)
 			freeWorkspace(Math.abs(workspaces));
 	}
@@ -2720,7 +2720,7 @@ function buyJob(what, confirmed, noTip) {
 
 function addGeneticist(amount){
 	if (game.global.challengeActive == "Corrupted") game.challenges.Corrupted.hiredGenes = true;
-	var workspaces = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+	var workspaces = game.workspaces;
 	var owned = game.resources.trimps.owned - game.resources.trimps.employed;
 	if (owned < 1) return;
 	if (owned < amount)
@@ -7316,7 +7316,7 @@ function checkHousing(getHighest){
 }
 
 function assignExtraWorkers(){
-	var workspaces = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+	var workspaces = game.workspaces;
 	var freeTrimps = (game.resources.trimps.owned - game.resources.trimps.employed);
 	//Won't leave you with less than 15% of your max as breeders
 	if (freeTrimps - workspaces < Math.floor(game.resources.trimps.realMax() * 0.15)) return;

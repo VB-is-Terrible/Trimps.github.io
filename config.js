@@ -6702,6 +6702,9 @@ var toReturn = {
 		},
 		goldMaps: false,
 		quickTrimps: false
+	},
+	get workspaces () {
+		Math.ceil(this.resources.trimps.realMax() / 2) - this.resources.trimps.employed;
 	}
 };
 return toReturn;
