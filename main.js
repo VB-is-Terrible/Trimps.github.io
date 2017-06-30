@@ -51,6 +51,7 @@ function save(exportThis, fromManual) {
 	delete saveGame.badGuyDeathTexts;
 	delete saveGame.tierValues;
 	delete saveGame.colorsList;
+	delete saveGame.workspaces;
     for (var item in saveGame.equipment) {
 		delete saveGame.equipment[item].tooltip;
 		delete saveGame.equipment[item].blocktip;
