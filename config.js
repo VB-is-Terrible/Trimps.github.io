@@ -20,7 +20,7 @@
 //Spoilers ahead, proceed with caution
 
 "use strict"
-const TTimeAccel = 100;
+let TTimeAccel = 100;
 
 function newGame () {
 var toReturn = {
