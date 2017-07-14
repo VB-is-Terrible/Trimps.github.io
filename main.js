@@ -10395,16 +10395,16 @@ function gameTimeout() {
 	if (game.options.menu.pauseGame.enabled) return;
 	var now = new Date().getTime();
 	//4432
+	var tick = 1000 / game.settings.speed / TTimeAccel;
 	if ((now - game.global.start - game.global.time) > 3600000){
 		checkOfflineProgress();
 		game.global.start = now;
 		game.global.time = 0;
 		game.global.lastOnline = now;
-		setTimeout(gameTimeout, (1000 / game.settings.speed));
+		setTimeout(gameTimeout, tick);
 		return;
 	}
 	game.global.lastOnline = now;
-    var tick = 1000 / game.settings.speed;
     game.global.time += tick;
     var dif = (now - game.global.start) - game.global.time;
     while (dif >= tick) {
@@ -10562,4 +10562,4 @@ displayPerksBtn();
 setTimeout(autoSave, 60000);
 setTimeout(buyAutoStructures, 2000);
 costUpdatesTimeout();
-setTimeout(gameTimeout, (1000 / game.settings.speed));
+setTimeout(gameTimeout, (1000 / game.settings.speed / TTimeAccel));

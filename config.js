@@ -18,7 +18,10 @@
 		<http://www.gnu.org/licenses/>. */
 
 //Spoilers ahead, proceed with caution
+
 "use strict"
+const TTimeAccel = 100;
+
 function newGame () {
 var toReturn = {
 	global: {
