@@ -2083,7 +2083,7 @@ function rewardResource(what, baseAmt, level, checkMapLootScale, givePercentage)
 				amt *= (1 + game.empowerments.Wind.getCombatModifier());
 			}
 		}
-		else 
+		else
 			amt *= (1 + (game.empowerments.Wind.getCombatModifier() * 10));
 	}
 	if (what == "helium"){
@@ -4251,7 +4251,7 @@ function handleIceDebuff() {
 		elem = document.getElementById('iceEmpowermentIcon');
 	}
 	elem.style.display = 'inline-block';
-	document.getElementById('iceEmpowermentText').innerHTML = prettify(game.empowerments.Ice.currentDebuffPower);	
+	document.getElementById('iceEmpowermentText').innerHTML = prettify(game.empowerments.Ice.currentDebuffPower);
 }
 
 function handleWindDebuff() {
@@ -4267,7 +4267,7 @@ function handleWindDebuff() {
 		elem = document.getElementById('windEmpowermentIcon');
 	}
 	elem.style.display = 'inline-block';
-	document.getElementById('windEmpowermentText').innerHTML = prettify(game.empowerments.Wind.currentDebuffPower);	
+	document.getElementById('windEmpowermentText').innerHTML = prettify(game.empowerments.Wind.currentDebuffPower);
 }
 
 function setEmpowerTab(){
@@ -6241,7 +6241,7 @@ function startFight() {
 		badName = displayedName;
 	if (cell.empowerment){
 		badName = getEmpowerment(-1, true) + " " + badName;
-		badName = "<span class='badName" + getEmpowerment(-1) + "'>" + badName + "</span>"; 
+		badName = "<span class='badName" + getEmpowerment(-1) + "'>" + badName + "</span>";
 	}
 	if (game.global.challengeActive == "Coordinate"){
 		badCoord = getBadCoordLevel();
@@ -6667,7 +6667,7 @@ function calculateDamage(number, buildString, isTrimp, noCheckAchieve, cell) { /
 				number *= dailyModifiers.rampage.getMult(game.global.dailyChallenge.rampage.strength, game.global.dailyChallenge.rampage.stacks);
 			}
 		}
-		
+
 
 	}
 	else {
@@ -8186,6 +8186,7 @@ function fight(makeUp) {
         cellElem = document.getElementById("cell" + cellNum);
     }
     if (game.global.soldierHealth <= 0) {
+		// Respawn trimps, break up
 		if (isVoid) game.global.voidDeaths++;
 		game.stats.trimpsKilled.value += game.resources.trimps.soldiers;
 		game.stats.battlesLost.value++;
@@ -8324,7 +8325,7 @@ function fight(makeUp) {
 		}
 		//Post Loot
 		resetEmpowerStacks();
-		
+
 		//Map and World split here for non-loot stuff, anything for both goes above
 		//Map Only
         if (game.global.mapsActive && cellNum == (game.global.mapGridArray.length - 1)) {

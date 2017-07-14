@@ -318,7 +318,7 @@ var toReturn = {
 			formatModifier: function (number){
 				return prettify(number * 100);
 			},
-			color: "#33bb33", 
+			color: "#33bb33",
 			currentDebuffPower: 0,
 			level: 1,
 			retainLevel: 0,
