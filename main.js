@@ -10415,7 +10415,7 @@ function gameTimeout() {
     }
     runGameLoop(null, now);
     updateLabels();
-    setTimeout(gameTimeout, (dif - tick));
+    setTimeout(gameTimeout, (tick));
 }
 
 /**
