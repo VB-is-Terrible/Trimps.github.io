@@ -2048,7 +2048,6 @@ function resetGame(keepPortal) {
 	goldenUpgradesShown = false;
 	game.global.selectedHeirloom = [];
 	resetOnePortalRewards();
-	playFabLoginErrors = 0;
 
 	setFormation("0");
 	hideFormations();
@@ -2927,7 +2926,7 @@ function drawAllBuildings(){
 	var elem = document.getElementById("buildingsHere");
 	elem.innerHTML = "";
 	for (var item in game.buildings){
-		building = game.buildings[item];
+		var building = game.buildings[item];
 		if (building.locked == 1) continue;
 		drawBuilding(item, elem);
 		if (building.alert && game.options.menu.showAlerts.enabled){
@@ -3742,7 +3741,7 @@ function goRadial(elem, currentSeconds, totalSeconds, frameTime){
     if (currentSeconds <= 0) currentSeconds = 0;
     elem.style.transition = "";
     elem.style.transform = "rotate(" + timeToDegrees(currentSeconds, totalSeconds) + "deg)";
-	apply = function () {
+	var apply = function () {
 		elem.style.transform = "rotate(" + timeToDegrees(currentSeconds + frameTime / 1000, totalSeconds) + "deg)";
 		elem.style.transition = currentSeconds < 0.1 ? "" : "transform " + frameTime + "ms linear";
 	}

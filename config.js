@@ -549,7 +549,7 @@ var toReturn = {
 				},
 				restore: function () {
 					document.getElementById("innerWrapper").style.backgroundColor = "initial";
-					link = document.getElementById("darkTheme");
+					var link = document.getElementById("darkTheme");
 					if (!link) return;
 					link.disabled = true;
 					document.head.removeChild(link);
@@ -3546,7 +3546,7 @@ var toReturn = {
 			fast: true,
 			loot: function (level) {
 				if (!game.global.runningChallengeSquared){
-					amt = rewardResource("helium", 30, level);
+					var amt = rewardResource("helium", 30, level);
 					message("You managed to steal " + prettify(amt) + " Helium canisters from that Omnipotrimp. That'll teach it.", "Loot", "oil", 'helium', 'helium');
 				}
 				if (game.global.world % 5 == 0){
