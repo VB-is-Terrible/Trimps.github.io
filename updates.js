@@ -565,6 +565,16 @@ function tooltip(what, isItIn, event, textString, attachFunction, numCheck, rena
 		elem.style.left = "33.75%";
 		elem.style.top = "25%";
 	}
+	if (what == 'Time Accel') {
+		let returnObj = tooltips.showTimeAccel();
+		tooltipText = returnObj.tooltip;
+		costText = returnObj.costText;
+		ondisplay = tooltips.handleNumInputButton();
+		elem.style.left = "33.75%";
+		elem.style.top = "25%";
+		isItIn = '';
+	}
+
 	if (isItIn == "jobs"){
 		var buyAmt = game.global.buyAmt;
 		if (buyAmt == "Max") buyAmt = calculateMaxAfford(game.jobs[what], false, false, true);
@@ -665,15 +675,6 @@ function tooltip(what, isItIn, event, textString, attachFunction, numCheck, rena
 		costText = (attachFunction) ? attachFunction : "";
 		tooltipText = textString;
 		noExtraCheck = true;
-	}
-
-	if (what == 'Time Accel') {
-		let returnObj = tooltips.showTimeAccel();
-		tooltipText = returnObj.tooltip;
-		costText = returnObj.costText;
-		ondisplay = tooltips.handleNumInputButton();
-		elem.style.left = "33.75%";
-		elem.style.top = "25%";
 	}
 
 	if (!noExtraCheck){
