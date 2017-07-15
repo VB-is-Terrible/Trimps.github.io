@@ -3837,14 +3837,15 @@ tooltips.showError = (textString) => {
 	if (document.queryCommandSupported('copy')){
 		costText += "<div id='clipBoardBtn' class='btn btn-success'>Copy to Clipboard</div>";
 	}
+	costText += "<a id='downloadLink' target='_blank' download='Trimps Bug Report', href=";
 	if (Blob !== null) {
 		let blob = new Blob([bugReport], {type: 'text/plain'});
 		let uri = URL.createObjectURL(blob);
-		costText += "<div id='downloadBtn' class='btn' target='blank' download='Trimps Bug Report', href=";
 		costText += uri;
-		costText += " >Download file</div>";
-
+	} else {
+		costText += 'data:text/plain,' + encodeURIComponent(bugReport);
 	}
+	costText += " ><div class='btn btn-danger' id='downloadBtn'>Download as file</div></a>";
 	disableSaving = true;
 	return {tooltip: tooltip, costText: costText};
 };
