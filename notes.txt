@@ -5,3 +5,15 @@ Flags for screen state
 	trimpAchievementsOpen: flag for achivements screen
 	heirloomsShown: flag for heirloom screen
 	trimpStatsDisplayed: flag for stats screen
+
+To find undeclared locals:
+	Use JSHint
+
+Processing JSHint:
+remove line numbers:
+^\d+\s*
+remove duplicates
+Push onto one line with
+(.*)\n
+ ->
+$1,
