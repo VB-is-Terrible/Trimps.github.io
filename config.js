@@ -19,7 +19,7 @@
 
 //Spoilers ahead, proceed with caution
 
-"use strict"
+"use strict";
 let TTimeAccel = 1;
 
 function newGame () {
