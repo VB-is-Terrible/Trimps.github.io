@@ -2400,7 +2400,7 @@ var toReturn = {
 			finished: 0,
 			title: "Speed: Star",
 			description: function (number) {
-				number = formatMinutesForDescriptions(this.breakpoints[number]);
+				var number = formatMinutesForDescriptions(this.breakpoints[number]);
 				return "<span style='font-size: .8em'>Clear Imploding Star in " + number + " or less from start of run</span>";
 			},
 			display: function () {
@@ -2425,7 +2425,7 @@ var toReturn = {
 			finished: 0,
 			title: "Speed: Spire",
 			description: function (number) {
-				number = formatMinutesForDescriptions(this.breakpoints[number]);
+				var number = formatMinutesForDescriptions(this.breakpoints[number]);
 				return "<span style='font-size: .8em'>Clear The Spire in " + number + " or less from start of run</span>";
 			},
 			display: function () {
@@ -3128,7 +3128,7 @@ var toReturn = {
 				var icon;
 				var tag;
 				if (random === 0) {
-					amt = rewardResource("fragments", 1, level, true);
+					var amt = rewardResource("fragments", 1, level, true);
 					res = "fragments";
 					icon = "th";
 					tag = "secondary";
@@ -3565,7 +3565,7 @@ var toReturn = {
 			fast: true,
 			loot: function (level) {
 				if (!game.global.runningChallengeSquared){
-					amt = rewardResource("helium", 30, level);
+					var amt rewardResource("helium", 30, level);
 					message("You managed to steal " + prettify(amt) + " Helium canisters from that Omnipotrimp. That'll teach it.", "Loot", "oil", 'helium', 'helium');
 				}
 				if (game.global.world % 5 == 0){
@@ -3585,7 +3585,7 @@ var toReturn = {
 			health: 6,
 			fast: true,
 			loot: function (level) {
-				amt = rewardResource("metal", 5, level);
+				var amt rewardResource("metal", 5, level);
 				message("Radioactive waste spills to the ground as the Mutimp falls. You send a few Trimps to grab the shiny stuff in the toxic sludge, which ends up being " + prettify(amt) + " bars of metal!", "Loot", "*cubes", null, 'primary');
 			}
 		},
@@ -3596,7 +3596,7 @@ var toReturn = {
 			health: 12,
 			fast: true,
 			loot: function (level) {
-				amt = rewardResource("metal", 8, level);
+				var amt = rewardResource("metal", 8, level);
 				message("Radioactive waste spills to the ground as the Hulking Mutimp falls. You send a few Trimps to grab the shiny stuff in the toxic sludge, which ends up being " + prettify(amt) + " bars of metal!", "Loot", "*cubes", null, 'primary');
 			}
 		},
