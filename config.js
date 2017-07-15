@@ -20,7 +20,7 @@
 //Spoilers ahead, proceed with caution
 
 "use strict"
-let TTimeAccel = 100;
+let TTimeAccel = 1;
 
 function newGame () {
 var toReturn = {
@@ -787,7 +787,17 @@ var toReturn = {
 					tooltipUpdateFunction = "";
 					this.enabled = 0;
 				}
-			}
+			},
+			timeAccel: {
+				enabled: 0,
+				extraTags: "other time accel",
+				description: "Set a custom time multipler",
+				titles: ["Time Accel"],
+				onToggle: function () {
+					cancelTooltip();
+					tooltip('Time Accel', null, 'update');
+					this.enabled = 0;
+				}			}
 		}
 	},
 	talents: {

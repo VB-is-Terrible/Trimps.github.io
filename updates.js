@@ -476,13 +476,7 @@ function tooltip(what, isItIn, event, textString, attachFunction, numCheck, rena
 		game.global.lockTooltip = true;
 		elem.style.left = "33.75%";
 		elem.style.top = "25%";
-		ondisplay = function() {
-			var box = document.getElementById("customNumberBox");
-			// Chrome chokes on setSelectionRange on a number box; fall back to select()
-			try { box.setSelectionRange(0, box.value.length); }
-			catch (e) { box.select(); }
-			box.focus();
-		};
+		ondisplay = tooltips.handleNumInputButton()
 		noExtraCheck = true;
 	}
 	if (what == 'Max'){
@@ -669,6 +663,15 @@ function tooltip(what, isItIn, event, textString, attachFunction, numCheck, rena
 		tooltipText = returnObj.tooltip;
 		costText = returnObj.costText;
 		ondisplay = tooltips.handleCopyButton();
+	}
+
+	if (what == 'Time Accel') {
+		let returnObj = tooltips.showTimeAccel();
+		tooltipText = returnObj.tooltip;
+		costText = returnObj.costText;
+		ondisplay = tooltips.handleNumInputButton();
+		elem.style.left = "33.75%";
+		elem.style.top = "25%";
 	}
 
 	if (!noExtraCheck){
@@ -3815,7 +3818,7 @@ tooltips.showError = (textString) => {
 
 /**
  * Generates a function to handle copy button on popups
- * @return {Function} Function to handle copy butons
+ * @return {Function} Function to handle copy buttons
  */
 tooltips.handleCopyButton = () => {
 	let ondisplay;
@@ -3836,3 +3839,39 @@ tooltips.handleCopyButton = () => {
 	}
 	return ondisplay;
 };
+
+tooltips.showTimeAccel = () => {
+	let tooltipText = "Type in the multipler to accelarate time at. Your scientists warn against multiplers above 10000";
+	tooltipText += "<br/><br/><input id='customNumberBox' style='width: 50%' value='" + TTimeAccel.toString() + "' />";
+	let costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='setTimeAccel()'>Apply</div><div class='btn btn-info' onclick='cancelTooltip()'>Cancel</div></div>";
+	game.global.lockTooltip = true;
+	return {tooltip: tooltipText, costText: costText};
+};
+
+/**
+* Generates a function to handle apply button on popups
+ * @return {Function} Function to handle apply buttons
+ */
+tooltips.handleNumInputButton = () => {
+	let ondisplay = function() {
+		var box = document.getElementById("customNumberBox");
+		// Chrome chokes on setSelectionRange on a number box; fall back to select()
+		try { box.setSelectionRange(0, box.value.length); }
+		catch (e) { box.select(); }
+		box.focus();
+	};
+	return ondisplay;
+};
+
+/**
+ * Reads in new accelerater, sets TTimeAccel accordingly
+ */
+let setTimeAccel = () => {
+	let numBox = document.getElementById("customNumberBox");
+	unlockTooltip();
+	tooltip('hide');
+	if (numBox === null) return;
+	let n = parseFloat(numBox.value);
+	if (n === NaN) return;
+	TTimeAccel = n;
+}
