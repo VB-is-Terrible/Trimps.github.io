@@ -626,7 +626,11 @@ var toReturn = {
 				titles: ["Geneticistassist Settings"],
 				lockUnless: function () {
 					return (game.global.Geneticistassist);
-				}
+				},
+				onToggle: function () {
+					tooltip('Customize Targets', null, 'update');
+				},
+				tooltip: true,
 			},
 			overkillColor: {
 				enabled: 1,

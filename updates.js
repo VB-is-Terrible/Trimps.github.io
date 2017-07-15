@@ -3365,6 +3365,10 @@ function toggleSetting(setting, elem, fromPortal, updateOnly){
 	}
 	if (setting == "pauseGame" && game.options.menu.disablePause.enabled == 0) return;
 	var menuOption = game.options.menu[setting];
+	if (menuOption.onToggle && menuOption.tooltip) {
+		menuOption.onToggle();
+		return;
+	}
 	if (setting == "usePlayFab" && !updateOnly){
 		if (menuOption.enabled == 0){
 			authenticated = enablePlayFab();
