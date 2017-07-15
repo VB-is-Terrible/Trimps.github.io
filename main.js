@@ -10428,8 +10428,7 @@ function runGameLoop(makeUp, now) {
 	try {
 		gameLoop(makeUp, now);
 	} catch (e) {
-		// Manual override, this is more important
-		game.global.lockTooltip = false;
+		unlockTooltip(); // Override any other tooltips
 		tooltip('hide');
 		tooltip('Error', null, 'update', e.stack);
 		throw(e);
