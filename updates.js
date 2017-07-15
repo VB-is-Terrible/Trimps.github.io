@@ -3827,7 +3827,7 @@ tooltips.showError = (textString) => {
 		saveFile = save(true);
 		bugReport += saveFile + "\n";
 	} catch (e) {
-		bugReport += "While attempting to save, the following error occured\n"
+		bugReport += "While attempting to save, the following error occured\n";
 		bugReport += e.stack + "\n";
 	}
 	bugReport += "--END SAVE FILE--";
@@ -3837,7 +3837,14 @@ tooltips.showError = (textString) => {
 	if (document.queryCommandSupported('copy')){
 		costText += "<div id='clipBoardBtn' class='btn btn-success'>Copy to Clipboard</div>";
 	}
-	costText += "</div>";
+	if (Blob !== null) {
+		let blob = new Blob([bugReport], {type: 'text/plain'});
+		let uri = URL.createObjectURL(blob);
+		costText += "<div id='downloadBtn' class='btn' target='blank' download='Trimps Bug Report', href=";
+		costText += uri;
+		costText += " >Download file</div>";
+
+	}
 	disableSaving = true;
 	return {tooltip: tooltip, costText: costText};
 };
@@ -3859,9 +3866,9 @@ tooltips.handleCopyButton = () => {
 					document.getElementById('clipBoardBtn').innerHTML = "Error, not copied";
 				  }
 			});
-		}
+		};
 	} else {
-		ondisplay = function () {document.getElementById('exportArea').select};
+		ondisplay = function () {document.getElementById('exportArea').select();};
 	}
 	return ondisplay;
 };
@@ -3898,6 +3905,6 @@ let setTimeAccel = () => {
 	tooltip('hide');
 	if (numBox === null) return;
 	let n = parseFloat(numBox.value);
-	if (n === NaN) return;
+	if (isNaN(n)) return;
 	TTimeAccel = n;
-}
+};
