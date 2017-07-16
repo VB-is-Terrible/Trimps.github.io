@@ -2808,7 +2808,7 @@ function freeWorkspace(amount){
 
 	if (total < amount) return false;
 	jobs.sort(sort);
-
+	jobs.reverse();
 	for (i = 0; i < jobs.length && amount > 0; i++) {
 		var selected = jobs[i].name;
 		var fireAmount = amount;
