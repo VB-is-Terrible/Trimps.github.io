@@ -23,7 +23,7 @@ var tooltipUpdateFunction = "";
 var lastMousePos = [];
 var lastTooltipFrom = "";
 // List of all external dependencies. Useful for linters.
-//let game, shiftPressed, dailyModifiers, boneTemp, getEmpowerment, getDailyHeliumValue, countDailyWeight, dayOfWeek, getDailyTimeString, displaySelectedHeirloom, selectedPreset, squaredConfig, getAvailableGoldenUpgrades, getNextTalentCost, getHighestTalentTier, getGeneratorUpgradeHtml, getMagmiteDecayAmt, updateGeneratorUpgradeHtml, isNumberBad, save, playFabId, getPlayFabLoginHTML, calculateMaxAfford, getTooltipJobText, canAffordBuilding, getPortalUpgradePrice, getNextPrestigeValue, canAffordCoordinationTrimps, resolvePow, getMaxForResource, calculateTimeToMax, calcHeirloomBonus, getPlayerModifier, getAvgLootSecond, formatMinutesForDescriptions, getMapIndex, voidBuffConfig, addSpecials, mutations, getPlayerCritChance, getPlayerCritDamageMult, getCurrentMapObject, scaleLootLevel, updateAllBattleNumbers, lookingAtCurrentChallenge, heirloomsShown, goldenUpgradesShown, resetOnePortalRewards, setFormation, hideFormations, hideBones, setGather, recycleAllExtraHeirlooms, newGame, autoSave, getDailyChallenge, readingDaily, toggleAutoStorage, recalculateHeirloomBonuses, pauseFight, repeatClicked, toggleAutoTrap, toggleAutoStructure, toggleAutoGolden, toggleAutoUpgrades, toggleAutoPrestiges, toggleVoidMaps, fireMode, setEmpowerTab, resetAdvMaps, cancelPortal, updateRadioStacks, updateAntiStacks, setNonMapBox, checkChallengeSquaredAllowed, initTalents, countChallengeSquaredReward, fadeIn, updatePortalTimer, displayTalents, displayNature, displayPortalUpgrades, updateAllPerkColors, buildBuilding, refundQueueItem, setNewCraftItem, updateGeneratorInfo, toggleGeneticistassist, displayGoldenUpgrades, getNextPrestigeCost, canAffordJob, canAffordTwoLevel, ctrlPressed, enablePlayFab, calculateDamage, checkHousing, countHeliumSpent, getHighestPrestige, getGoldenFrequency, disableSaving, TTimeAccel, ;
+//let game, shiftPressed, dailyModifiers, boneTemp, getEmpowerment, getDailyHeliumValue, countDailyWeight, dayOfWeek, getDailyTimeString, displaySelectedHeirloom, selectedPreset, squaredConfig, getAvailableGoldenUpgrades, getNextTalentCost, getHighestTalentTier, getGeneratorUpgradeHtml, getMagmiteDecayAmt, updateGeneratorUpgradeHtml, isNumberBad, save, playFabId, getPlayFabLoginHTML, calculateMaxAfford, getTooltipJobText, canAffordBuilding, getPortalUpgradePrice, getNextPrestigeValue, canAffordCoordinationTrimps, resolvePow, getMaxForResource, calculateTimeToMax, calcHeirloomBonus, getPlayerModifier, getAvgLootSecond, formatMinutesForDescriptions, getMapIndex, voidBuffConfig, addSpecials, mutations, getPlayerCritChance, getPlayerCritDamageMult, getCurrentMapObject, scaleLootLevel, updateAllBattleNumbers, lookingAtCurrentChallenge, heirloomsShown, goldenUpgradesShown, resetOnePortalRewards, setFormation, hideFormations, hideBones, setGather, recycleAllExtraHeirlooms, newGame, autoSave, getDailyChallenge, readingDaily, toggleAutoStorage, recalculateHeirloomBonuses, pauseFight, repeatClicked, toggleAutoTrap, toggleAutoStructure, toggleAutoGolden, toggleAutoUpgrades, toggleAutoPrestiges, toggleVoidMaps, fireMode, setEmpowerTab, resetAdvMaps, cancelPortal, updateElectricityStacks, updateAntiStacks, setNonMapBox, checkChallengeSquaredAllowed, initTalents, countChallengeSquaredReward, fadeIn, updatePortalTimer, displayTalents, displayNature, displayPortalUpgrades, updateAllPerkColors, buildBuilding, refundQueueItem, setNewCraftItem, updateGeneratorInfo, toggleGeneticistassist, displayGoldenUpgrades, getNextPrestigeCost, canAffordJob, canAffordTwoLevel, ctrlPressed, enablePlayFab, calculateDamage, checkHousing, countHeliumSpent, getHighestPrestige, getGoldenFrequency, disableSaving, TTimeAccel, ;
 //"onmouseover="tooltip('*TOOLTIP_TITLE*', 'customText', event, '*TOOLTIP_TEXT*');" onmouseout="tooltip('hide')""
 //in the event of what == 'confirm', numCheck works as a Title! Exciting, right?
 function tooltip(what, isItIn, event, textString, attachFunction, numCheck, renameBtn, noHide, hideCancel, ignoreShift) { //Now 20% less menacing. Work in progress.
@@ -1383,6 +1383,12 @@ function getBattleStatBd(what) {
 		currentCalc *= stackStr;
 		textString += "<tr style='color: red'><td class='bdTitle'>Decay</td><td>x 0.995</td><td>" + game.challenges.Decay.stacks + "</td><td class='bdPercent'>x " + stackStr.toFixed(3) + "</td><td class='bdNumber'>" + prettify(currentCalc) + "</td>" + getFluctuation(currentCalc, minFluct, maxFluct) + "</tr>";
 	}
+	if (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse") {
+		var mult = (1 - (game.challenges.Electricity.stacks * 0.1));
+		currentCalc *= mult;
+
+		textString += "<tr style='color: red'><td class='bdTitle'>" + game.global.challengeActive + "</td><td>-10%</td><td>" + game.challenges.Electricity.stacks.toString() + "</td><td class='bdPercent'>x " + mult.toFixed(1) + "</td><td class='bdNumber'>" + prettify(currentCalc) + "</td>" + getFluctuation(currentCalc, minFluct, maxFluct) + "</tr>";
+	}
 	if (game.global.challengeActive == "Daily"){
 		var mult = 0;
 		if (typeof game.global.dailyChallenge.weakness !== 'undefined' && what == 'attack'){
@@ -2330,7 +2336,7 @@ function resetGame(keepPortal) {
 	setEmpowerTab();
 	resetAdvMaps();
 	cancelPortal();
-	updateRadioStacks();
+	updateElectricityStacks();
 	updateDecayStacks();
 	updateAntiStacks();
 	setNonMapBox();

@@ -22,7 +22,7 @@
 "use strict";
 let TTimeAccel = 1;
 // List of all external dependencies. Useful for linters.
-//let prettify, getCurrentMapObject, refreshMap, swapClass, tooltip, updateTalentNumbers, save, gameTimeout, updatePortalTimer, cancelTooltip, tooltipUpdateFunction, updateForemenCount, toggleAutoStructure, updateAntiStacks, isSaving, getDailyChallenge, startDaily, abandonDaily, unlockUpgrade, refreshMaps, updateBalanceStacks, message, addNewSetting, getScientistInfo, getScientistLevel, toggleAutoUpgrades, updateDecayStacks, updateMapCredits, mutations, getFuelBurnRate, scaleNumberForBonusHousing, formatMinutesForDescriptions, getMinutesThisPortal, updateRadioStacks, givePresimptLoot, activateTurkimpPowers, givePumpkimpLoot, rewardResource, fadeIn, addHelium, checkAchieve, giveSingleAchieve, planetBreaker, unlockEquipment, updateGoodBar, simpleSeconds, scaleToCurrentMap, addResCheckMax, updateSkeleBtn, romanNumeral, createMap, purgeBionics, getMapIndex, unlockJob, createHeirloom, enableImprovedAutoStorage, unlockMapStuff, unlockBuilding, getRandomIntSeeded, calculatePercentageBuildingCost, calcHeirloomBonus, ctrlPressed, clearQueue, buyBuilding, buildGrid, drawGrid, pauseFight, toggleAutoTrap, prestigeEquipment, levelEquipment, unlockFormation;
+//let prettify, getCurrentMapObject, refreshMap, swapClass, tooltip, updateTalentNumbers, save, gameTimeout, updatePortalTimer, cancelTooltip, tooltipUpdateFunction, updateForemenCount, toggleAutoStructure, updateAntiStacks, isSaving, getDailyChallenge, startDaily, abandonDaily, unlockUpgrade, refreshMaps, updateBalanceStacks, message, addNewSetting, getScientistInfo, getScientistLevel, toggleAutoUpgrades, updateDecayStacks, updateMapCredits, mutations, getFuelBurnRate, scaleNumberForBonusHousing, formatMinutesForDescriptions, getMinutesThisPortal, updateElectricityStacks, givePresimptLoot, activateTurkimpPowers, givePumpkimpLoot, rewardResource, fadeIn, addHelium, checkAchieve, giveSingleAchieve, planetBreaker, unlockEquipment, updateGoodBar, simpleSeconds, scaleToCurrentMap, addResCheckMax, updateSkeleBtn, romanNumeral, createMap, purgeBionics, getMapIndex, unlockJob, createHeirloom, enableImprovedAutoStorage, unlockMapStuff, unlockBuilding, getRandomIntSeeded, calculatePercentageBuildingCost, calcHeirloomBonus, ctrlPressed, clearQueue, buyBuilding, buildGrid, drawGrid, pauseFight, toggleAutoTrap, prestigeEquipment, levelEquipment, unlockFormation;
 function newGame () {
 var toReturn = {
 	global: {
@@ -48,7 +48,6 @@ var toReturn = {
 		soldierHealthRemaining: 0,
 		soldierCurrentAttack: 0,
 		soldierCurrentBlock: 0,
-		radioStacks: 0,
 		fighting: false,
 		health: 50,
 		attack: 6,
@@ -1525,13 +1524,14 @@ var toReturn = {
 			},
 			fireAbandon: true,
 			abandon: function () {
-				game.global.radioStacks = 0;
-				updateRadioStacks();
+				game.challenges.Electricity.stacks = 0;
+				updateElectricityStacks();
 			},
 			heldHelium: 0,
 			heliumThrough: 79,
 			allowSquared: true,
 			squaredDescription: "Use the keys you found in the Prison to bring your portal to an extremely dangerous dimension. In this dimension enemies will electrocute your Trimps, stacking a debuff with each attack that damages Trimps for 10% of total health per turn per stack, and reduces Trimp attack by 10% per stack.",
+			stacks: 0,
 			highestSquared: 0,
 			unlockString: "clear 'The Prison' at Zone 80"
 		},
@@ -3370,8 +3370,8 @@ var toReturn = {
 					game.challenges.Electricity.heldHelium = 0;
 					game.global.challengeActive = "";
 					addHelium(reward);
-					game.global.radioStacks = 0;
-					updateRadioStacks();
+					game.challenges.Electricity.stacks = 0;
+					updateElectricityStacks();
 				}
 			}
 		},
