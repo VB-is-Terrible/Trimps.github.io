@@ -2599,7 +2599,7 @@ function numTab(what, p, fromRestore) {
 				num = num.split('%');
 				num[0] = parseFloat(num[0]);
 				if (num[0] <= 100 && num[0] >= 0){
-					var workspaces = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+					var workspaces = game.workspaces;
 					num = Math.floor(workspaces * (num[0] / 100));
 				}
 				else num = 1;
