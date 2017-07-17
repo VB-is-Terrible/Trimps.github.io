@@ -19,6 +19,12 @@
 
 //Spoilers ahead, proceed with caution
 
+
+/**
+ * String containing HTML
+ * @typedef {String} HTMLString
+ */
+
 "use strict";
 let TTimeAccel = 1;
 // List of all external dependencies. Useful for linters.
