@@ -9,6 +9,8 @@ Flags for screen state
 To find undeclared locals:
 	Use JSHint
 
+When refactoring fight:
+	move voidsnip code from startfight to fight
 Processing JSHint:
 remove line numbers:
 ^\d+\s*
