@@ -6665,7 +6665,6 @@ applySoldierToughness: function applySoldierToughness() {
 
 /**
  * Applies geneticist bonus and sets up next geneticist
- * @return {[type]} [description]
  */
 applySoldierGeneticist: function applySoldierGeneticist() {
 	if (game.global.lowestGen >= 0) {
@@ -6738,7 +6737,6 @@ applySoldierFormation: function applySoldierFormation() {
 
 /**
  * Applies balance mutator
- * @return {[type]} [description]
  */
 applySoldierBalance: function applySoldierBalance() {
 	if (game.global.challengeActive == "Balance"){
