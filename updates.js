@@ -3825,7 +3825,7 @@ let tooltips = {};
 /**
  * Generates tooltip and text for error popup
  * @param  {String} textString String of error stack
- * @return {{tooltip: String, costText: String}}   tooltip to be shown[description]
+ * @return {{tooltip: String, costText: String}}   tooltip to be shown
  */
 tooltips.showError = (textString) => {
 	let tooltip = "<p>Well this is embarrassing. Trimps has encountered an error. Try refreshing the page.</p>";
