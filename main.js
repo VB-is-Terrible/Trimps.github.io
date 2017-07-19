@@ -10612,7 +10612,6 @@ function gameTimeout() {
  * Passes parameters to gameLoop, handles errors.
  * @param  {bool} makeUp makeUp causes the function to loop to exhaust ticks
  * @param  {Date} now    Date.now()
- * @return {[type]}        [description]
  */
 function runGameLoop(makeUp, now) {
 	try {
